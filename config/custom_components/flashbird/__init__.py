@@ -8,7 +8,6 @@ from .const import DOMAIN, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
 
-
 async def async_setup(
     hass: HomeAssistant, config: ConfigEntry
 ):  # pylint: disable=unused-argument
