@@ -1,0 +1,14 @@
+{
+  "domain": "flashbird",
+  "name": "Flashbird",
+  "codeowners": [
+      "@gorfo"
+  ],
+  "config_flow": false,
+  "documentation": "",
+  "issue_tracker": "",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "quality_scale": "silver",
+  "version": "1.0.0-alpha"
+}
