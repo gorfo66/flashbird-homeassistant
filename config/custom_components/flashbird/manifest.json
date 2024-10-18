@@ -4,7 +4,7 @@
   "codeowners": [
       "@gorfo"
   ],
-  "config_flow": false,
+  "config_flow": true,
   "documentation": "",
   "issue_tracker": "",
   "integration_type": "device",

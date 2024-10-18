@@ -1,0 +1,28 @@
+{
+  "title": "flashbird",
+  "config": {
+    "flow_title": "flashbird configuration",
+    "step": {
+      "user": {
+        "title": "Vos infos de connexion",
+        "description": "Donnez vos infos de connexion",
+        "data": {
+          "name": "Nom"
+        },
+        "data_description": {
+          "name": "Nom de l'intégration"
+        }
+      },
+      "2": {
+        "title": "Page 2",
+        "description": "Une deuxième page de configuration",
+        "data": {
+          "sensor_id": "Sensor"
+        },
+        "data_description": {
+          "sensor_id": "Le capteur permettant d'utiliser les selector dans ce beau tuto."
+        }
+      }
+    }
+  }
+}

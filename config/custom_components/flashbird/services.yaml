@@ -1,0 +1,21 @@
+raz_compteur:
+  name: Raz compteur
+  description: Remet à zéro le compteur de temps et optionnellement donne la valeur de départ
+  target:
+    entity:
+      integration: flashbird
+      device_class: duration
+  fields:
+    valeur_depart:
+      name: Valeur départ
+      description: La valeur de départ du compteur
+      required: false
+      advanced: false
+      example: "10"
+      default: "0"
+      selector:
+        number:
+          min: 0
+          max: 900
+          step: 1
+          mode: slider
