@@ -1,10 +1,14 @@
 from homeassistant.const import Platform
 
-DOMAIN = "flashbird"
-PLATFORMS: list[Platform] = [Platform.SENSOR]
-SERVICE_RAZ_COMPTEUR = "raz_compteur"
-CONF_NAME = "name"
-CONF_DEVICE_ID = "device_id"
-DEVICE_MANUFACTURER = 'smt'
+REFRESH_RATE = 30
 
-API_URL = "https://pegase.api-smt.ovh/graphql"
+DOMAIN = "flashbird"
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.DEVICE_TRACKER]
+
+CONF_SERIAL_NUMBER = "serial"
+CONF_TOKEN = "token"
+CONF_TRACKER_ID = "trackerId"
+CONF_MANUFACTURER = "manufacturer"
+CONF_MODEL = "model"
+
+EVT_DEVICE_INFO_RETRIEVED = "event_device_info_retrieved"

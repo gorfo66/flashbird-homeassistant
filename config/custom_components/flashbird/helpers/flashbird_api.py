@@ -1,10 +1,8 @@
 import logging
 import requests
-import json
-from ..const import API_URL
 
 _LOGGER = logging.getLogger(__name__)
-
+API_URL = "https://pegase.api-smt.ovh/graphql"
 
 def flashbird_get_token(login: str, password: str) -> str:
     payload = {
@@ -22,13 +20,31 @@ def flashbird_get_token(login: str, password: str) -> str:
     return response['data']['createUserOrSignInWithEmailAndPassword']['token']
 
 
-def flashbird_get_device_info(token, device_id):
-    payload = {"query": "query Devices {  user {    devices {      id      activated      latitude      longitude      lockEnabled      deviceType      orientation      serialNumber      vehicleType      batteryPercentage      status {        isConnectedToGSM        lastPollingTimestamp      }      statistics {        totalDistance      }      motorcycle {        id        brand {          label        }        model {          label        }      }      statistics {        totalDistance        totalTime      }    }  }}", "variables": {}, "operationName": "Devices"}
+def flashbird_find_device_id(token, serial):
+    payload = {
+        "operationName": "Devices",
+        "query": "query Devices { user { devices { id  serialNumber }}}",
+        "variables": {}
+    }
     headers = {'Authorization': 'Bearer ' + token}
     r = requests.post(API_URL, json=payload, headers=headers)
     response = r.json()
     for device in response['data']['user']['devices']:
-        if device['id'] == device_id:
-            return device
+        if device['serialNumber'] == serial:
+            return device['id']
 
     return None
+
+
+def flashbird_get_device_info(token, device_id):
+    payload = {
+        "operationName": "Devices",
+        "query": "query Devices($deviceId: ID!) { user { device(id: $deviceId) { id activated latitude longitude lockEnabled deviceType orientation serialNumber vehicleType batteryPercentage status { isConnectedToGSM lastPollingTimestamp } motorcycle { id brand { label } model { label } } statistics { totalDistance totalTime } } }}",
+        "variables": {
+            "deviceId": device_id
+        }
+    }
+    headers = {'Authorization': 'Bearer ' + token}
+    r = requests.post(API_URL, json=payload, headers=headers)
+    response = r.json()
+    return response['data']['user']['device']

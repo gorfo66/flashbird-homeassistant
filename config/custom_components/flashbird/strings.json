@@ -4,23 +4,17 @@
     "flow_title": "flashbird configuration",
     "step": {
       "user": {
-        "title": "Vos infos de connexion",
-        "description": "Donnez vos infos de connexion",
+        "title": "Login",
+        "description": "You need to provide your flashbird credentials. They will not be stored in this application",
         "data": {
-          "name": "Nom"
+          "email": "Email",
+          "password": "Password",
+          "serial": "Serial number"
         },
         "data_description": {
-          "name": "Nom de l'intégration"
-        }
-      },
-      "2": {
-        "title": "Page 2",
-        "description": "Une deuxième page de configuration",
-        "data": {
-          "sensor_id": "Sensor"
-        },
-        "data_description": {
-          "sensor_id": "Le capteur permettant d'utiliser les selector dans ce beau tuto."
+          "name": "Email",
+          "password": "Password",
+          "serial" : "The serial number of the flashbird tracker"
         }
       }
     }
