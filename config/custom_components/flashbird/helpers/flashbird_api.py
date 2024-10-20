@@ -1,10 +1,13 @@
 import logging
 import requests
+from homeassistant.core import HomeAssistant
+from ..const import EVT_NEED_REFRESH
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "https://pegase.api-smt.ovh/graphql"
 
 def flashbird_get_token(login: str, password: str) -> str:
+    _LOGGER.info('Get new token')
     payload = {
         "query": "mutation CreateUserOrSignInWithEmailAndPassword($email: String!, $password: String!) { createUserOrSignInWithEmailAndPassword(email: $email, password: $password) { token }}",
         "variables": {
@@ -20,7 +23,8 @@ def flashbird_get_token(login: str, password: str) -> str:
     return response['data']['createUserOrSignInWithEmailAndPassword']['token']
 
 
-def flashbird_find_device_id(token, serial):
+def flashbird_find_device_id(token, serial) -> str:
+    _LOGGER.info('Find device id from serial ' + serial)
     payload = {
         "operationName": "Devices",
         "query": "query Devices { user { devices { id  serialNumber }}}",
@@ -37,9 +41,10 @@ def flashbird_find_device_id(token, serial):
 
 
 def flashbird_get_device_info(token, device_id):
+    _LOGGER.info('Find device info from id ' + device_id)
     payload = {
         "operationName": "Devices",
-        "query": "query Devices($deviceId: ID!) { user { device(id: $deviceId) { id activated latitude longitude lockEnabled deviceType orientation serialNumber vehicleType batteryPercentage status { isConnectedToGSM lastPollingTimestamp } motorcycle { id brand { label } model { label } } statistics { totalDistance totalTime } } }}",
+        "query": "query Devices($deviceId: ID!) { user { device(id: $deviceId) { id activated latitude longitude lockEnabled deviceType serialNumber batteryPercentage status { isConnectedToGSM lastPollingTimestamp } motorcycle { id brand { label } model { label } } statistics { totalDistance totalTime } } }}",
         "variables": {
             "deviceId": device_id
         }
@@ -48,3 +53,21 @@ def flashbird_get_device_info(token, device_id):
     r = requests.post(API_URL, json=payload, headers=headers)
     response = r.json()
     return response['data']['user']['device']
+
+
+def flashbird_set_lock_enabled(token, device_id, status, callback):
+    _LOGGER.info('Change lock status ' + device_id)
+    payload = {
+      "operationName": "SetLockEnabled",
+      "query": "mutation SetLockEnabled($enabled: Boolean!, $deviceId: String) { setLockEnabled(enabled: $enabled, deviceId: $deviceId)}",
+      "variables": {
+          "enabled": status,
+          "deviceId": device_id
+      }
+    }
+
+    headers = {'Authorization': 'Bearer ' + token}
+    requests.post(API_URL, json=payload, headers=headers)
+
+    if callback:
+        callback()

@@ -1,15 +1,12 @@
 import logging
-from datetime import timedelta, datetime, timezone
 
 from homeassistant.core import HomeAssistant, callback, Event
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import EntityCategory, UnitOfLength
+from homeassistant.const import UnitOfLength
 
-from ..const import CONF_SERIAL_NUMBER, CONF_TOKEN, CONF_TRACKER_ID, EVT_DEVICE_INFO_RETRIEVED
-from ..helpers.flashbird_api import flashbird_get_device_info
+from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,7 +29,7 @@ class FlashbirdOdometerEntity(SensorEntity):
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + '_odometer'
-        self._attr_name = "Odometer"
+        self._attr_translation_key = 'odometer'
 
     @property
     def should_poll(self) -> bool:

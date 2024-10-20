@@ -4,18 +4,43 @@
     "flow_title": "flashbird configuration",
     "step": {
       "user": {
-        "title": "Login",
-        "description": "You need to provide your flashbird credentials. They will not be stored in this application",
+        "title": "Connexion",
+        "description": "Vous devez fournir vos identifiants de connexion Flashbird. Ils ne seront pas stockés sur Home assistant.",
         "data": {
           "email": "Email",
-          "password": "Password",
-          "serial": "Serial number"
+          "password": "Mot de passe",
+          "serial": "Numéro de série"
         },
         "data_description": {
           "name": "Email",
-          "password": "Password",
-          "serial" : "The serial number of the flashbird tracker"
+          "password": "Mot de passe",
+          "serial": "Le numéro de série du traqueur que vous souhaitez ajouter"
         }
+      }
+    }
+  },
+  "entity": {
+    "lock": {
+      "lock": {
+        "name": "Antivol"
+      }
+    },
+    "binary_sensor": {
+      "is_connected": {
+        "name": "Statut de la connexion au réseau"
+      }
+    },
+    "sensor" : {
+      "odometer": {
+        "name": "Odomètre"
+      },
+      "last_refresh" : {
+        "name": "Dernière mise à jour des données"
+      }
+    },
+    "device_tracker" : {
+      "tracker" : {
+        "name" : "Position"
       }
     }
   }

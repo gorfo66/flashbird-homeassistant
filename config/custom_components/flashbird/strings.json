@@ -18,5 +18,30 @@
         }
       }
     }
+  },
+  "entity": {
+    "lock": {
+      "lock": {
+        "name": "Lock"
+      }
+    },
+    "binary_sensor": {
+      "is_connected": {
+        "name": "GSM connection status"
+      }
+    },
+    "sensor" : {
+      "odometer": {
+        "name": "Odometer"
+      },
+      "last_refresh" : {
+        "name": "Last refresh date"
+      }
+    },
+    "device_tracker" : {
+      "tracker" : {
+        "name" : "Position"
+      }
+    }
   }
 }

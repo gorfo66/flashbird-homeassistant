@@ -8,7 +8,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.const import EntityCategory
 
-from ..const import CONF_SERIAL_NUMBER, REFRESH_RATE, CONF_TOKEN, CONF_TRACKER_ID, EVT_DEVICE_INFO_RETRIEVED
+from ..const import REFRESH_RATE, CONF_TOKEN, CONF_TRACKER_ID, EVT_DEVICE_INFO_RETRIEVED, EVT_NEED_REFRESH
 from ..helpers.flashbird_api import flashbird_get_device_info
 from ..helpers.device_info import define_device_info
 
@@ -32,7 +32,7 @@ class FlashbirdRefreshEntity(SensorEntity):
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + '_last_refresh'
-        self._attr_name = "Last refresh"
+        self._attr_translation_key = 'last_refresh'
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
@@ -54,13 +54,17 @@ class FlashbirdRefreshEntity(SensorEntity):
     @callback
     async def async_added_to_hass(self):
         
-        cancel = async_track_time_interval(
+        cancelTimer = async_track_time_interval(
             self._hass,
             self._refresh,
             interval=timedelta(seconds=REFRESH_RATE),
         )
+
+        cancelEventBus = self._hass.bus.async_listen(
+            EVT_NEED_REFRESH, self._refresh)
         
-        self.async_on_remove(cancel)
+        self.async_on_remove(cancelTimer)       
+        self.async_on_remove(cancelEventBus)
 
     @callback
     async def _refresh(self, event: Event):

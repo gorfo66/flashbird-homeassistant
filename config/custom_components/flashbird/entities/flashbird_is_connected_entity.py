@@ -2,15 +2,17 @@ import logging
 
 from homeassistant.core import HomeAssistant, callback, Event
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.device_tracker import TrackerEntity
+from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.const import UnitOfLength
+
 from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
+
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdTrackerEntity(TrackerEntity):
-
+class FlashbirdConnectedEntity(BinarySensorEntity):
     _hass: HomeAssistant
     _config: ConfigEntry
 
@@ -24,10 +26,8 @@ class FlashbirdTrackerEntity(TrackerEntity):
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + '_tracker'
-        self._attr_translation_key = 'tracker'
-        self._attr_entity_category = None
-        self._attr_location_accuracy = 1        
+        self._attr_unique_id = self._config.entry_id + '_is_connected'
+        self._attr_translation_key = 'is_connected'
 
     @property
     def should_poll(self) -> bool:
@@ -36,6 +36,14 @@ class FlashbirdTrackerEntity(TrackerEntity):
     @property
     def icon(self) -> str | None:
         return "mdi:timer-settings-outline"
+
+    @property
+    def device_class(self) -> BinarySensorDeviceClass | None:
+        return BinarySensorDeviceClass.CONNECTIVITY
+
+    @property
+    def native_unit_of_measurement(self) -> str | None:
+        return UnitOfLength.KILOMETERS
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -50,10 +58,9 @@ class FlashbirdTrackerEntity(TrackerEntity):
     async def _refresh(self, event: Event):
         _LOGGER.debug('refresh')
 
-        longitude = event.data['longitude']
-        latitude = event.data['latitude']
+        isLocked = event.data['status']['isConnectedToGSM']
+        if (self.is_on != isLocked):
+            self._attr_is_on = isLocked
+            self.async_write_ha_state()
 
-        if (longitude != self.longitude or latitude != self.latitude):
-          self._attr_longitude = longitude
-          self._attr_latitude = latitude
-          self.async_write_ha_state()
+        

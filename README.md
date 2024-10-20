@@ -62,3 +62,8 @@ debugpy:
   start: true
   wait: false
   port: 5678
+
+
+
+# To do
+- manage translation of the devices
