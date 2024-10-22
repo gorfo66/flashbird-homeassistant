@@ -41,7 +41,7 @@ class FlashbirdRefreshEntity(SensorEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:timer-settings-outline"
+        return "mdi:refresh"
 
     @property
     def device_class(self) -> SensorDeviceClass | None:

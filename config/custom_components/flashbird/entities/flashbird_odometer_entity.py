@@ -37,7 +37,7 @@ class FlashbirdOdometerEntity(SensorEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:timer-settings-outline"
+        return "mdi:counter"
 
     @property
     def device_class(self) -> SensorDeviceClass | None:

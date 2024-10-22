@@ -35,7 +35,7 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:timer-settings-outline"
+        return "mdi:wifi"
 
     @property
     def device_class(self) -> BinarySensorDeviceClass | None:

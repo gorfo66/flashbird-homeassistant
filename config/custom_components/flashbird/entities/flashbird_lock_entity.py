@@ -38,7 +38,7 @@ class FlashbirdLockEntity(LockEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:timer-settings-outline"
+        return "mdi:shield-lock-outline"
 
     @property
     def device_info(self) -> DeviceInfo:

@@ -20,6 +20,11 @@ def flashbird_get_token(login: str, password: str) -> str:
     r = requests.post(API_URL, json=payload)
 
     response = r.json()
+
+    if ('errors' in response):
+      _LOGGER.error('The authentication failed')
+      raise ValueError('invalid credentials')
+
     return response['data']['createUserOrSignInWithEmailAndPassword']['token']
 
 
@@ -33,6 +38,11 @@ def flashbird_find_device_id(token, serial) -> str:
     headers = {'Authorization': 'Bearer ' + token}
     r = requests.post(API_URL, json=payload, headers=headers)
     response = r.json()
+
+    if ('errors' in response):
+      _LOGGER.error('Token expired')
+      raise ValueError('invalid token')
+
     for device in response['data']['user']['devices']:
         if device['serialNumber'] == serial:
             return device['id']
@@ -52,6 +62,11 @@ def flashbird_get_device_info(token, device_id):
     headers = {'Authorization': 'Bearer ' + token}
     r = requests.post(API_URL, json=payload, headers=headers)
     response = r.json()
+
+    if ('errors' in response):
+      _LOGGER.error('Token expired')
+      raise ValueError('invalid token')
+
     return response['data']['user']['device']
 
 

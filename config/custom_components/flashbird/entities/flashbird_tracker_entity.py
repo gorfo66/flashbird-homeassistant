@@ -35,7 +35,7 @@ class FlashbirdTrackerEntity(TrackerEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:timer-settings-outline"
+        return "mdi:map-marker"
 
     @property
     def device_info(self) -> DeviceInfo:

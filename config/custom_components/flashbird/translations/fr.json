@@ -1,5 +1,5 @@
 {
-  "title": "flashbird",
+  "title": "Flashbird",
   "config": {
     "flow_title": "flashbird configuration",
     "step": {
@@ -15,6 +15,23 @@
           "name": "Email",
           "password": "Mot de passe",
           "serial": "Le numéro de série du traqueur que vous souhaitez ajouter"
+        }
+      }
+    }
+  },
+  "options": {
+    "flow_title": "Flashbird re-configuration",
+    "step": {
+      "init": {
+        "title": "Reconnexion",
+        "description": "Vous devez fournir à nouveau vos identifiants de connexion Flashbird. Ils ne seront pas stockés sur Home assistant.",
+        "data": {
+          "email": "Email",
+          "password": "Mot de passe"
+        },
+        "data_description": {
+          "name": "Email",
+          "password": "Mot de passe"
         }
       }
     }
@@ -42,6 +59,16 @@
       "tracker" : {
         "name" : "Position"
       }
+    }
+  },
+  "exceptions": {
+    "invalid_token": {
+      "message": "Vos identifiants sont invalides"
+    }
+  },
+  "exception": {
+    "invalid_token": {
+      "message": "Vos identifiants sont invalides"
     }
   }
 }
