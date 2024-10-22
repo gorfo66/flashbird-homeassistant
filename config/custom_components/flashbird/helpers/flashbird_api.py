@@ -6,6 +6,7 @@ from ..const import EVT_NEED_REFRESH
 _LOGGER = logging.getLogger(__name__)
 API_URL = "https://pegase.api-smt.ovh/graphql"
 
+
 def flashbird_get_token(login: str, password: str) -> str:
     _LOGGER.info('Get new token')
     payload = {
@@ -22,8 +23,8 @@ def flashbird_get_token(login: str, password: str) -> str:
     response = r.json()
 
     if ('errors' in response):
-      _LOGGER.error('The authentication failed')
-      raise ValueError('invalid credentials')
+        _LOGGER.error('The authentication failed')
+        raise ValueError('invalid credentials')
 
     return response['data']['createUserOrSignInWithEmailAndPassword']['token']
 
@@ -40,8 +41,8 @@ def flashbird_find_device_id(token, serial) -> str:
     response = r.json()
 
     if ('errors' in response):
-      _LOGGER.error('Token expired')
-      raise ValueError('invalid token')
+        _LOGGER.error('Token expired')
+        raise ValueError('invalid token')
 
     for device in response['data']['user']['devices']:
         if device['serialNumber'] == serial:
@@ -64,8 +65,8 @@ def flashbird_get_device_info(token, device_id):
     response = r.json()
 
     if ('errors' in response):
-      _LOGGER.error('Token expired')
-      raise ValueError('invalid token')
+        _LOGGER.error('Token expired')
+        raise ValueError('invalid token')
 
     return response['data']['user']['device']
 
@@ -73,12 +74,12 @@ def flashbird_get_device_info(token, device_id):
 def flashbird_set_lock_enabled(token, device_id, status, callback):
     _LOGGER.info('Change lock status ' + device_id)
     payload = {
-      "operationName": "SetLockEnabled",
-      "query": "mutation SetLockEnabled($enabled: Boolean!, $deviceId: String) { setLockEnabled(enabled: $enabled, deviceId: $deviceId)}",
-      "variables": {
-          "enabled": status,
-          "deviceId": device_id
-      }
+        "operationName": "SetLockEnabled",
+        "query": "mutation SetLockEnabled($enabled: Boolean!, $deviceId: String) { setLockEnabled(enabled: $enabled, deviceId: $deviceId)}",
+        "variables": {
+            "enabled": status,
+            "deviceId": device_id
+        }
     }
 
     headers = {'Authorization': 'Bearer ' + token}

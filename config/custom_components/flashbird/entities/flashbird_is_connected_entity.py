@@ -18,10 +18,10 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
 
     def __init__(
         self,
-        hass: HomeAssistant,  # pylint: disable=unused-argument
-        configEntry: ConfigEntry,  # pylint: disable=unused-argument
+        hass: HomeAssistant,
+        configEntry: ConfigEntry,
     ) -> None:
-        
+
         self._hass = hass
         self._config = configEntry
 
@@ -51,7 +51,8 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
 
     @callback
     async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)        
+        cancel = self._hass.bus.async_listen(
+            EVT_DEVICE_INFO_RETRIEVED, self._refresh)
         self.async_on_remove(cancel)
 
     @callback
@@ -62,5 +63,3 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
         if (self.is_on != isLocked):
             self._attr_is_on = isLocked
             self.async_write_ha_state()
-
-        

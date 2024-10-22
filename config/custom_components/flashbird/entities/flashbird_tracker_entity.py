@@ -16,10 +16,10 @@ class FlashbirdTrackerEntity(TrackerEntity):
 
     def __init__(
         self,
-        hass: HomeAssistant,  # pylint: disable=unused-argument
-        configEntry: ConfigEntry,  # pylint: disable=unused-argument
+        hass: HomeAssistant,
+        configEntry: ConfigEntry,
     ) -> None:
-        
+
         self._hass = hass
         self._config = configEntry
 
@@ -27,7 +27,7 @@ class FlashbirdTrackerEntity(TrackerEntity):
         self._attr_unique_id = self._config.entry_id + '_tracker'
         self._attr_translation_key = 'tracker'
         self._attr_entity_category = None
-        self._attr_location_accuracy = 1        
+        self._attr_location_accuracy = 1
 
     @property
     def should_poll(self) -> bool:
@@ -43,7 +43,8 @@ class FlashbirdTrackerEntity(TrackerEntity):
 
     @callback
     async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)        
+        cancel = self._hass.bus.async_listen(
+            EVT_DEVICE_INFO_RETRIEVED, self._refresh)
         self.async_on_remove(cancel)
 
     @callback
@@ -54,6 +55,6 @@ class FlashbirdTrackerEntity(TrackerEntity):
         latitude = event.data['latitude']
 
         if (longitude != self.longitude or latitude != self.latitude):
-          self._attr_longitude = longitude
-          self._attr_latitude = latitude
-          self.async_write_ha_state()
+            self._attr_longitude = longitude
+            self._attr_latitude = latitude
+            self.async_write_ha_state()

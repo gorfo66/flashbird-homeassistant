@@ -18,8 +18,8 @@ class FlashbirdLockEntity(LockEntity):
 
     def __init__(
         self,
-        hass: HomeAssistant,  # pylint: disable=unused-argument
-        configEntry: ConfigEntry,  # pylint: disable=unused-argument
+        hass: HomeAssistant,
+        configEntry: ConfigEntry,
     ) -> None:
 
         self._hass = hass

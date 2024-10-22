@@ -20,10 +20,10 @@ class FlashbirdOdometerEntity(SensorEntity):
 
     def __init__(
         self,
-        hass: HomeAssistant,  # pylint: disable=unused-argument
-        configEntry: ConfigEntry,  # pylint: disable=unused-argument
+        hass: HomeAssistant,
+        configEntry: ConfigEntry,
     ) -> None:
-        
+
         self._hass = hass
         self._config = configEntry
 
@@ -57,16 +57,15 @@ class FlashbirdOdometerEntity(SensorEntity):
 
     @callback
     async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)        
+        cancel = self._hass.bus.async_listen(
+            EVT_DEVICE_INFO_RETRIEVED, self._refresh)
         self.async_on_remove(cancel)
 
     @callback
     async def _refresh(self, event: Event):
         _LOGGER.debug('refresh')
 
-        distance= event.data['statistics']['totalDistance'] / 1000
+        distance = event.data['statistics']['totalDistance'] / 1000
         if (self.native_value != distance):
-          self._attr_native_value = distance
-          self.async_write_ha_state()
-
-        
+            self._attr_native_value = distance
+            self.async_write_ha_state()
