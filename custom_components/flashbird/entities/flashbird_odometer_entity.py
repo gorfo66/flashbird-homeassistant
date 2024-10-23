@@ -12,6 +12,7 @@ from homeassistant.helpers.entity import DeviceInfo
 
 from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
+from ..coordinator import FlashbirdDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,7 +27,11 @@ class FlashbirdOdometerEntity(SensorEntity):
         self,
         hass: HomeAssistant,
         configEntry: ConfigEntry,
+        coordinator: FlashbirdDataUpdateCoordinator
     ) -> None:
+        
+        super().__init__(coordinator)
+        
         self._hass = hass
         self._config = configEntry
 

@@ -17,6 +17,7 @@ from ..const import (
 )
 from ..helpers.device_info import define_device_info
 from ..helpers.flashbird_api import flashbird_get_device_info
+from ..coordinator import FlashbirdDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,7 +32,11 @@ class FlashbirdRefreshEntity(SensorEntity):
         self,
         hass: HomeAssistant,
         configEntry: ConfigEntry,
+        coordinator: FlashbirdDataUpdateCoordinator
     ) -> None:
+        
+        super().__init__(coordinator)
+
         self._hass = hass
         self._config = configEntry
 
@@ -58,27 +63,13 @@ class FlashbirdRefreshEntity(SensorEntity):
 
     @callback
     async def async_added_to_hass(self):
-        cancel_timer = async_track_time_interval(
-            self._hass,
-            self._refresh,
-            interval=timedelta(seconds=REFRESH_RATE),
-        )
-
-        cancel_event_bus = self._hass.bus.async_listen(EVT_NEED_REFRESH, self._refresh)
-
-        self.async_on_remove(cancel_timer)
-        self.async_on_remove(cancel_event_bus)
+        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)
+        self.async_on_remove(cancel)
 
     @callback
     async def _refresh(self, event: Event):
-        _LOGGER.debug("Refresh sensors from Api call")
+        _LOGGER.debug("refresh")
 
-        deviceInfo = await self._hass.async_add_executor_job(
-            flashbird_get_device_info,
-            self._config.data[CONF_TOKEN],
-            self._config.data[CONF_TRACKER_ID],
-        )
-        self._hass.bus.fire(EVT_DEVICE_INFO_RETRIEVED, deviceInfo)
         self._attr_native_value = datetime.now(UTC)
 
         # On sauvegarde le nouvel état

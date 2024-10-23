@@ -16,10 +16,12 @@ async def async_setup_entry(
     """Do the setup all the sensor entities."""
     _LOGGER.debug("Calling async_setup_entry entry=%s", entry)
 
+    coordinator = entry.runtime_data.coordinator
+
     async_add_entities(
         [
-            FlashbirdRefreshEntity(hass, entry),
-            FlashbirdOdometerEntity(hass, entry),
+            FlashbirdRefreshEntity(hass, entry, coordinator),
+            FlashbirdOdometerEntity(hass, entry, coordinator),
         ],
         update_before_add=True,
     )
