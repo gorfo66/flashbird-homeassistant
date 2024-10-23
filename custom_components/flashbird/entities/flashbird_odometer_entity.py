@@ -1,10 +1,14 @@
 import logging
 
-from homeassistant.core import HomeAssistant, callback, Event
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.const import UnitOfLength
+from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.helpers.entity import DeviceInfo
 
 from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
@@ -13,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class FlashbirdOdometerEntity(SensorEntity):
-    """La classe de l'entité TutoHacs qui écoute la première"""
+    """References the total mileage e.g. the odometer"""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -23,13 +27,12 @@ class FlashbirdOdometerEntity(SensorEntity):
         hass: HomeAssistant,
         configEntry: ConfigEntry,
     ) -> None:
-
         self._hass = hass
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + '_odometer'
-        self._attr_translation_key = 'odometer'
+        self._attr_unique_id = self._config.entry_id + "_odometer"
+        self._attr_translation_key = "odometer"
 
     @property
     def should_poll(self) -> bool:
@@ -57,15 +60,14 @@ class FlashbirdOdometerEntity(SensorEntity):
 
     @callback
     async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(
-            EVT_DEVICE_INFO_RETRIEVED, self._refresh)
+        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)
         self.async_on_remove(cancel)
 
     @callback
     async def _refresh(self, event: Event):
-        _LOGGER.debug('refresh')
+        _LOGGER.debug("refresh")
 
-        distance = event.data['statistics']['totalDistance'] / 1000
-        if (self.native_value != distance):
+        distance = event.data["statistics"]["totalDistance"] / 1000
+        if self.native_value != distance:
             self._attr_native_value = distance
             self.async_write_ha_state()

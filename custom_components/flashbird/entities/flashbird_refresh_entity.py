@@ -1,22 +1,28 @@
 import logging
-from datetime import timedelta, datetime, timezone
+from datetime import UTC, datetime, timedelta
 
-from homeassistant.core import HomeAssistant, callback, Event
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
-from homeassistant.helpers.event import async_track_time_interval
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.const import EntityCategory
+from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.event import async_track_time_interval
 
-from ..const import REFRESH_RATE, CONF_TOKEN, CONF_TRACKER_ID, EVT_DEVICE_INFO_RETRIEVED, EVT_NEED_REFRESH
-from ..helpers.flashbird_api import flashbird_get_device_info
+from ..const import (
+    CONF_TOKEN,
+    CONF_TRACKER_ID,
+    EVT_DEVICE_INFO_RETRIEVED,
+    EVT_NEED_REFRESH,
+    REFRESH_RATE,
+)
 from ..helpers.device_info import define_device_info
+from ..helpers.flashbird_api import flashbird_get_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class FlashbirdRefreshEntity(SensorEntity):
-    """La classe de l'entité TutoHacs qui écoute la première"""
+    """Technical entity that periodically calls the API and displays the last refresh timestamp online"""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -26,13 +32,12 @@ class FlashbirdRefreshEntity(SensorEntity):
         hass: HomeAssistant,
         configEntry: ConfigEntry,
     ) -> None:
-
         self._hass = hass
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + '_last_refresh'
-        self._attr_translation_key = 'last_refresh'
+        self._attr_unique_id = self._config.entry_id + "_last_refresh"
+        self._attr_translation_key = "last_refresh"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
@@ -53,26 +58,28 @@ class FlashbirdRefreshEntity(SensorEntity):
 
     @callback
     async def async_added_to_hass(self):
-
-        cancelTimer = async_track_time_interval(
+        cancel_timer = async_track_time_interval(
             self._hass,
             self._refresh,
             interval=timedelta(seconds=REFRESH_RATE),
         )
 
-        cancelEventBus = self._hass.bus.async_listen(
-            EVT_NEED_REFRESH, self._refresh)
+        cancel_event_bus = self._hass.bus.async_listen(EVT_NEED_REFRESH, self._refresh)
 
-        self.async_on_remove(cancelTimer)
-        self.async_on_remove(cancelEventBus)
+        self.async_on_remove(cancel_timer)
+        self.async_on_remove(cancel_event_bus)
 
     @callback
     async def _refresh(self, event: Event):
-        _LOGGER.debug('Refresh sensors from Api call')
+        _LOGGER.debug("Refresh sensors from Api call")
 
-        deviceInfo = await self._hass.async_add_executor_job(flashbird_get_device_info, self._config.data[CONF_TOKEN], self._config.data[CONF_TRACKER_ID])
+        deviceInfo = await self._hass.async_add_executor_job(
+            flashbird_get_device_info,
+            self._config.data[CONF_TOKEN],
+            self._config.data[CONF_TRACKER_ID],
+        )
         self._hass.bus.fire(EVT_DEVICE_INFO_RETRIEVED, deviceInfo)
-        self._attr_native_value = datetime.now(timezone.utc)
+        self._attr_native_value = datetime.now(UTC)
 
         # On sauvegarde le nouvel état
         self.async_write_ha_state()

@@ -1,5 +1,6 @@
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.entity import DeviceInfo
+
 from ..const import *
 
 
@@ -9,5 +10,5 @@ def define_device_info(configEntry: ConfigEntry) -> DeviceInfo:
         identifiers={(DOMAIN, configEntry.entry_id)},
         name=configEntry.data[CONF_SERIAL_NUMBER],
         manufacturer=configEntry.data[CONF_MANUFACTURER],
-        model=configEntry.data[CONF_MODEL]
+        model=configEntry.data[CONF_MODEL],
     )

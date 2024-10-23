@@ -7,7 +7,7 @@ PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
     Platform.DEVICE_TRACKER,
-    Platform.LOCK
+    Platform.LOCK,
 ]
 
 CONF_SERIAL_NUMBER = "serial"

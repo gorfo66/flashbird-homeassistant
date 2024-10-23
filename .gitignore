@@ -1,7 +1,2 @@
 __pycache__/
-/config/*
-!/config/custom_components*
-!/config/custom_components/*
-!/config/custom_components/flashbird
-!/config/custom_components/flashbird/*
-/config/custom_components/flashbird/__pycache__
+config

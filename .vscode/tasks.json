@@ -4,13 +4,7 @@
     {
       "label": "Run Home Assistant on port 9123",
       "type": "shell",
-      "command": "hass -c ./config",
-      "problemMatcher": []
-    },
-    {
-      "label": "Restart Home Assistant on port 9123",
-      "type": "shell",
-      "command": "pkill hass ; hass -c ./config",
+      "command": "scripts/develop",
       "problemMatcher": []
     }
   ]

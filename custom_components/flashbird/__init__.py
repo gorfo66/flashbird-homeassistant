@@ -1,16 +1,16 @@
 """Initialisation du package de l'intégration HACS Tuto"""
+
 import logging
 
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, PLATFORMS, EVT_NEED_REFRESH
+from .const import DOMAIN, EVT_NEED_REFRESH, PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-
     _LOGGER.debug(
         "Appel de async_setup_entry entry: entry_id='%s', data='%s'",
         entry.entry_id,
