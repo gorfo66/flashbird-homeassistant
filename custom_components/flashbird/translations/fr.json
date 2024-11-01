@@ -9,12 +9,14 @@
         "data": {
           "email": "Email",
           "password": "Mot de passe",
-          "serial": "Numéro de série"
+          "serial": "Numéro de série",
+          "name": "Nom de l'appareil"
         },
         "data_description": {
-          "name": "Email",
+          "email": "Email",
           "password": "Mot de passe",
-          "serial": "Le numéro de série du traqueur que vous souhaitez ajouter"
+          "serial": "Le numéro de série du traqueur que vous souhaitez ajouter",
+          "name": "Le nom que vous souhaitez donner à cet appareil"
         }
       }
     }
@@ -50,6 +52,9 @@
     "sensor" : {
       "odometer": {
         "name": "Odomètre"
+      },
+      "battery": {
+        "name": "Batterie"
       },
       "last_refresh" : {
         "name": "Dernière mise à jour des données"

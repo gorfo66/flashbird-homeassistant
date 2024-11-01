@@ -6,6 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .entities.flashbird_odometer_entity import FlashbirdOdometerEntity
 from .entities.flashbird_refresh_entity import FlashbirdRefreshEntity
+from .entities.flashbird_battery_entity import FlashbirdBatteryEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ async def async_setup_entry(
         [
             FlashbirdRefreshEntity(hass, entry),
             FlashbirdOdometerEntity(hass, entry),
+            FlashbirdBatteryEntity(hass, entry),
         ],
         update_before_add=True,
     )
