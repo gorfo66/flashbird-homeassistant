@@ -4,7 +4,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entities.flashbird_odometer_entity import FlashbirdOdometerEntity
+from .entities.flashbird_mileage_entity import FlashbirdMileageEntity
 from .entities.flashbird_refresh_entity import FlashbirdRefreshEntity
 from .entities.flashbird_battery_entity import FlashbirdBatteryEntity
 
@@ -20,7 +20,7 @@ async def async_setup_entry(
     async_add_entities(
         [
             FlashbirdRefreshEntity(hass, entry),
-            FlashbirdOdometerEntity(hass, entry),
+            FlashbirdMileageEntity(hass, entry),
             FlashbirdBatteryEntity(hass, entry),
         ],
         update_before_add=True,

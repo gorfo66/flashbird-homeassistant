@@ -16,8 +16,8 @@ from ..helpers.device_info import define_device_info
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdOdometerEntity(SensorEntity):
-    """References the total mileage e.g. the odometer"""
+class FlashbirdMileageEntity(SensorEntity):
+    """References the total mileage e.g. the mileage"""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -31,8 +31,8 @@ class FlashbirdOdometerEntity(SensorEntity):
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + "_odometer"
-        self._attr_translation_key = "odometer"
+        self._attr_unique_id = self._config.entry_id + "_mileage"
+        self._attr_translation_key = "mileage"
 
     @property
     def should_poll(self) -> bool:

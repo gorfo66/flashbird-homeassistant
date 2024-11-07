@@ -50,8 +50,8 @@
       }
     },
     "sensor" : {
-      "odometer": {
-        "name": "Odometer"
+      "mileage": {
+        "name": "Mileage"
       },
       "battery": {
         "name": "Battery"
