@@ -15,6 +15,8 @@ CONF_TOKEN = "token"
 CONF_TRACKER_ID = "trackerId"
 CONF_MANUFACTURER = "manufacturer"
 CONF_MODEL = "model"
+CONF_FIRMWARE_VERSION = "firmwareVersion"
+CONF_NAME = "name"
 
 EVT_DEVICE_INFO_RETRIEVED = "event_device_info_retrieved"
 EVT_NEED_REFRESH = "event_device_info_need_refresh"

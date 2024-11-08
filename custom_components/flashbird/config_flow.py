@@ -5,14 +5,7 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.core import HomeAssistantError, callback
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import (
-    CONF_MANUFACTURER,
-    CONF_MODEL,
-    CONF_SERIAL_NUMBER,
-    CONF_TOKEN,
-    CONF_TRACKER_ID,
-    DOMAIN,
-)
+from .const import *
 from .helpers.flashbird_api import (
     flashbird_find_device_id,
     flashbird_get_device_info,
@@ -32,6 +25,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
             {
                 vol.Required("email"): str,
                 vol.Required("password"): str,
+                vol.Required("name"): str,
                 vol.Required("serial"): str,
             }
         )
@@ -72,6 +66,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         self._config[CONF_TRACKER_ID] = trackerId
         self._config[CONF_MANUFACTURER] = deviceInfo["motorcycle"]["brand"]["label"]
         self._config[CONF_MODEL] = deviceInfo["motorcycle"]["model"]["label"]
+        self._config[CONF_NAME] = user_input['name']
 
         return self.async_create_entry(title=serial, data=self._config)
 

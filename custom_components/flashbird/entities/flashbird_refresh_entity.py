@@ -14,6 +14,7 @@ from ..const import (
     EVT_DEVICE_INFO_RETRIEVED,
     EVT_NEED_REFRESH,
     REFRESH_RATE,
+    CONF_FIRMWARE_VERSION
 )
 from ..helpers.device_info import define_device_info
 from ..helpers.flashbird_api import flashbird_get_device_info
@@ -70,7 +71,18 @@ class FlashbirdRefreshEntity(SensorEntity):
     async def _refresh(self, event: Event):
         _LOGGER.debug("refresh")
 
-        self._attr_native_value = datetime.now(UTC)
+        deviceInfo = await self._hass.async_add_executor_job(
+            flashbird_get_device_info,
+            self._config.data[CONF_TOKEN],
+            self._config.data[CONF_TRACKER_ID],
+        )
+        self._hass.bus.fire(EVT_DEVICE_INFO_RETRIEVED, deviceInfo)
 
-        # On sauvegarde le nouvel état
+        # get the firmware version and store it in the config entry, for the device
+        newConfig = self._config.data.copy()
+        newConfig[CONF_FIRMWARE_VERSION] = deviceInfo['softVersion']
+        self._hass.config_entries.async_update_entry(self._config, data=newConfig)
+
+        # Save new state
+        self._attr_native_value = datetime.now(UTC)
         self.async_write_ha_state()

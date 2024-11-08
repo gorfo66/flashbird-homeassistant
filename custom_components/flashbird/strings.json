@@ -9,12 +9,14 @@
         "data": {
           "email": "Email",
           "password": "Password",
-          "serial": "Serial number"
+          "serial": "Serial number",
+          "name": "Device name"
         },
         "data_description": {
-          "name": "Email",
+          "email": "Email",
           "password": "Password",
-          "serial" : "The serial number of the flashbird tracker"
+          "serial" : "The serial number of the flashbird tracker",
+          "name": "The name you want to use inside homeassistant. All the entities will be prefixed with this name"
         }
       }
     }
@@ -30,7 +32,7 @@
           "password": "Password"
         },
         "data_description": {
-          "name": "Email",
+          "email": "Email",
           "password": "Password"
         }
       }
@@ -48,8 +50,11 @@
       }
     },
     "sensor" : {
-      "odometer": {
-        "name": "Odometer"
+      "mileage": {
+        "name": "Mileage"
+      },
+      "battery": {
+        "name": "Battery"
       },
       "last_refresh" : {
         "name": "Last refresh date"

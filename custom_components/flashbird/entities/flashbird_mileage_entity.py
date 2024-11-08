@@ -1,8 +1,9 @@
 import logging
 
-from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
-    BinarySensorEntity,
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfLength
@@ -11,12 +12,13 @@ from homeassistant.helpers.entity import DeviceInfo
 
 from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
+from ..coordinator import FlashbirdDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdConnectedEntity(BinarySensorEntity):
-    """Entity that references the GSM network connectivity"""
+class FlashbirdMileageEntity(SensorEntity):
+    """References the total mileage e.g. the mileage"""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -25,13 +27,17 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
         self,
         hass: HomeAssistant,
         configEntry: ConfigEntry,
+        coordinator: FlashbirdDataUpdateCoordinator
     ) -> None:
+        
+        super().__init__(coordinator)
+        
         self._hass = hass
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + "_is_connected"
-        self._attr_translation_key = "is_connected"
+        self._attr_unique_id = self._config.entry_id + "_mileage"
+        self._attr_translation_key = "mileage"
 
     @property
     def should_poll(self) -> bool:
@@ -39,11 +45,15 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
 
     @property
     def icon(self) -> str | None:
-        return "mdi:wifi"
+        return "mdi:counter"
 
     @property
-    def device_class(self) -> BinarySensorDeviceClass | None:
-        return BinarySensorDeviceClass.CONNECTIVITY
+    def device_class(self) -> SensorDeviceClass | None:
+        return SensorDeviceClass.DISTANCE
+
+    @property
+    def state_class(self) -> SensorStateClass | None:
+        return SensorStateClass.TOTAL_INCREASING
 
     @property
     def native_unit_of_measurement(self) -> str | None:
@@ -62,7 +72,7 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
     async def _refresh(self, event: Event):
         _LOGGER.debug("refresh")
 
-        isConnected = event.data["status"]["isConnectedToGSM"]
-        if self.is_on != isConnected:
-            self._attr_is_on = isConnected
+        distance = event.data["statistics"]["totalDistance"] / 1000
+        if self.native_value != distance:
+            self._attr_native_value = distance
             self.async_write_ha_state()
