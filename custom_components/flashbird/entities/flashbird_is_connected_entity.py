@@ -6,16 +6,17 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfLength
-from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
+from ..data import FlashbirdConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdConnectedEntity(BinarySensorEntity):
+class FlashbirdConnectedEntity(CoordinatorEntity, BinarySensorEntity):
     """Entity that references the GSM network connectivity"""
 
     _hass: HomeAssistant
@@ -24,18 +25,17 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: ConfigEntry,
+        configEntry: FlashbirdConfigEntry,
     ) -> None:
+
+        super().__init__(configEntry.runtime_data.coordinator)
+
         self._hass = hass
         self._config = configEntry
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + "_is_connected"
         self._attr_translation_key = "is_connected"
-
-    @property
-    def should_poll(self) -> bool:
-        return False
 
     @property
     def icon(self) -> str | None:
@@ -54,15 +54,10 @@ class FlashbirdConnectedEntity(BinarySensorEntity):
         return define_device_info(self._config)
 
     @callback
-    async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)
-        self.async_on_remove(cancel)
-
-    @callback
-    async def _refresh(self, event: Event):
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-
-        isConnected = event.data["status"]["isConnectedToGSM"]
+        isConnected = self.coordinator.data["status"]["isConnectedToGSM"]
         if self.is_on != isConnected:
             self._attr_is_on = isConnected
             self.async_write_ha_state()

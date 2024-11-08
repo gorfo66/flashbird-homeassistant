@@ -7,17 +7,17 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfLength
-from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..const import EVT_DEVICE_INFO_RETRIEVED
 from ..helpers.device_info import define_device_info
-from ..coordinator import FlashbirdDataUpdateCoordinator
+from ..data import FlashbirdConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdMileageEntity(SensorEntity):
+class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
     """References the total mileage e.g. the mileage"""
 
     _hass: HomeAssistant
@@ -26,22 +26,17 @@ class FlashbirdMileageEntity(SensorEntity):
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: ConfigEntry,
-        coordinator: FlashbirdDataUpdateCoordinator
+        configEntry: FlashbirdConfigEntry
     ) -> None:
-        
-        super().__init__(coordinator)
-        
+
+        super().__init__(configEntry.runtime_data.coordinator)
+
         self._hass = hass
         self._config = configEntry
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + "_mileage"
         self._attr_translation_key = "mileage"
-
-    @property
-    def should_poll(self) -> bool:
-        return False
 
     @property
     def icon(self) -> str | None:
@@ -64,15 +59,10 @@ class FlashbirdMileageEntity(SensorEntity):
         return define_device_info(self._config)
 
     @callback
-    async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)
-        self.async_on_remove(cancel)
-
-    @callback
-    async def _refresh(self, event: Event):
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-
-        distance = event.data["statistics"]["totalDistance"] / 1000
+        distance = self.coordinator.data["statistics"]["totalDistance"] / 1000
         if self.native_value != distance:
             self._attr_native_value = distance
             self.async_write_ha_state()

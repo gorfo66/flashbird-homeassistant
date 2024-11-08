@@ -5,6 +5,7 @@ from homeassistant.config_entries import ConfigEntry
 
 type FlashbirdConfigEntry = ConfigEntry[FlashbirdData]
 
+
 @dataclass
 class FlashbirdData:
     """Data for the integration."""

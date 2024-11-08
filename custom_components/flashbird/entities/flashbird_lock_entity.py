@@ -2,22 +2,19 @@ import logging
 
 from homeassistant.components.lock import LockEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Event, HomeAssistant, callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..const import (
-    CONF_TOKEN,
-    CONF_TRACKER_ID,
-    EVT_DEVICE_INFO_RETRIEVED,
-    EVT_NEED_REFRESH,
-)
+from ..const import CONF_TOKEN, CONF_TRACKER_ID
 from ..helpers.device_info import define_device_info
 from ..helpers.flashbird_api import flashbird_set_lock_enabled
+from ..data import FlashbirdConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdLockEntity(LockEntity):
+class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
     """References the alert lock. Allows to lock/unlock the alerts and display the status"""
 
     _hass: HomeAssistant
@@ -26,8 +23,11 @@ class FlashbirdLockEntity(LockEntity):
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: ConfigEntry,
+        configEntry: FlashbirdConfigEntry,
     ) -> None:
+
+        super().__init__(configEntry.runtime_data.coordinator)
+
         self._hass = hass
         self._config = configEntry
 
@@ -39,10 +39,6 @@ class FlashbirdLockEntity(LockEntity):
         self._attr_translation_key = "lock"
 
     @property
-    def should_poll(self) -> bool:
-        return False
-
-    @property
     def icon(self) -> str | None:
         return "mdi:shield-lock-outline"
 
@@ -51,15 +47,10 @@ class FlashbirdLockEntity(LockEntity):
         return define_device_info(self._config)
 
     @callback
-    async def async_added_to_hass(self):
-        cancel = self._hass.bus.async_listen(EVT_DEVICE_INFO_RETRIEVED, self._refresh)
-        self.async_on_remove(cancel)
-
-    @callback
-    async def _refresh(self, event: Event):
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-
-        isLocked = event.data["lockEnabled"]
+        isLocked = self.coordinator.data["lockEnabled"]
         if self.is_locked != isLocked:
             self._attr_is_locked = isLocked
             self._attr_is_locking = False
@@ -74,9 +65,9 @@ class FlashbirdLockEntity(LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            True,
-            self._after_lock_update,
+            True
         )
+        await self.coordinator.async_request_refresh()
 
     async def async_unlock(self, **kwargs):
         _LOGGER.debug("unlock")
@@ -86,10 +77,6 @@ class FlashbirdLockEntity(LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            False,
-            self._after_lock_update,
+            False
         )
-
-    @callback
-    def _after_lock_update(self):
-        self._hass.bus.fire(EVT_NEED_REFRESH)
+        await self.coordinator.async_request_refresh()

@@ -18,6 +18,18 @@
           "serial" : "The serial number of the flashbird tracker",
           "name": "The name you want to use inside homeassistant. All the entities will be prefixed with this name"
         }
+      },
+      "reauth_confirm": {
+        "title": "Re-authentification",
+        "description": "You need to provide your flashbird credentials. They will not be stored in this application",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        },
+        "data_description": {
+          "email": "Email",
+          "password": "Password"
+        }
       }
     }
   },

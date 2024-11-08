@@ -65,7 +65,7 @@ def flashbird_get_device_info(token, device_id):
     return response["data"]["user"]["device"]
 
 
-def flashbird_set_lock_enabled(token, device_id, status, callback):
+def flashbird_set_lock_enabled(token, device_id, status):
     _LOGGER.info("Change lock status " + device_id)
     payload = {
         "operationName": "SetLockEnabled",
@@ -75,6 +75,3 @@ def flashbird_set_lock_enabled(token, device_id, status, callback):
 
     headers = {"Authorization": "Bearer " + token}
     requests.post(API_URL, json=payload, headers=headers)
-
-    if callback:
-        callback()

@@ -1,6 +1,6 @@
 from homeassistant.const import Platform
 
-REFRESH_RATE = 10
+REFRESH_RATE = 300
 
 DOMAIN = "Flashbird"
 PLATFORMS: list[Platform] = [
@@ -17,6 +17,3 @@ CONF_MANUFACTURER = "manufacturer"
 CONF_MODEL = "model"
 CONF_FIRMWARE_VERSION = "firmwareVersion"
 CONF_NAME = "name"
-
-EVT_DEVICE_INFO_RETRIEVED = "event_device_info_retrieved"
-EVT_NEED_REFRESH = "event_device_info_need_refresh"
