@@ -13,6 +13,9 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Do the setup all the tracker entities."""
-    _LOGGER.debug("Calling async_setup_entry entry=%s", entry)
+    _LOGGER.debug("Calling async_setup_entry entry=%s", entry.entry_id)
 
-    async_add_entities([FlashbirdTrackerEntity(hass, entry)], update_before_add=True)
+    async_add_entities([
+        FlashbirdTrackerEntity(hass, entry)
+    ],
+        update_before_add=False)

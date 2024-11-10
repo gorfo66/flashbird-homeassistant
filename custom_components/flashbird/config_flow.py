@@ -76,6 +76,41 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         """Get options flow for this handler"""
         return FlashbirdOptionsFlow(config_entry)
 
+    async def async_step_reauth(self) -> FlowResult:
+        """Perform reauth upon an API authentication error."""
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(self, user_input: dict | None = None) -> FlowResult:
+        """Dialog that informs the user that reauth is required."""
+        reauth_form = vol.Schema(
+            {
+                vol.Required("email"): str,
+                vol.Required("password"): str,
+            }
+        )
+
+        # if no data, show the form
+        if user_input is None:
+            return self.async_show_form(step_id="reauth_confirm", data_schema=reauth_form)
+
+        # process the data
+        try:
+            token = await self.hass.async_add_executor_job(
+                flashbird_get_token, user_input["email"], user_input["password"]
+            )
+            newConfig = self._config.data.copy()
+            newConfig[CONF_TOKEN] = token
+
+            self.hass.config_entries.async_update_entry(
+                self._config, data=newConfig)
+            return self.async_update_reload_and_abort(title=None, data=None)
+        except ValueError:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_token",
+                translation_placeholders=None,
+            )
+
 
 class FlashbirdOptionsFlow(OptionsFlow):
     _config: ConfigEntry = None
@@ -103,7 +138,8 @@ class FlashbirdOptionsFlow(OptionsFlow):
             newConfig = self._config.data.copy()
             newConfig[CONF_TOKEN] = token
 
-            self.hass.config_entries.async_update_entry(self._config, data=newConfig)
+            self.hass.config_entries.async_update_entry(
+                self._config, data=newConfig)
             return self.async_create_entry(title=None, data=None)
         except ValueError:
             raise HomeAssistantError(
