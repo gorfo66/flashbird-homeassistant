@@ -67,6 +67,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         self._config[CONF_MANUFACTURER] = deviceInfo["motorcycle"]["brand"]["label"]
         self._config[CONF_MODEL] = deviceInfo["motorcycle"]["model"]["label"]
         self._config[CONF_NAME] = user_input['name']
+        self._config[CONF_FIRMWARE_VERSION] = ''
 
         return self.async_create_entry(title=serial, data=self._config)
 

@@ -60,8 +60,7 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
           if (self.config_entry.data[CONF_FIRMWARE_VERSION] != firmwareVersion):
               newConfig = self.config_entry.data.copy()
               newConfig[CONF_FIRMWARE_VERSION] = firmwareVersion
-              self.hass.config_entries.async_update_entry(
-                  self._config, data=newConfig)
+              self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
 
           return deviceInfo
         except ValueError as err:
