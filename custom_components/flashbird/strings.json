@@ -66,10 +66,13 @@
         "name": "Mileage"
       },
       "battery": {
-        "name": "Battery"
+        "name": "Device Battery"
       },
       "last_refresh" : {
         "name": "Last refresh date"
+      },
+      "bike_battery" : {
+        "name": "Bike battery"
       }
     },
     "device_tracker" : {

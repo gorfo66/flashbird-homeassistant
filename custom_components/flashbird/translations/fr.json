@@ -66,10 +66,13 @@
         "name": "Kilométrage"
       },
       "battery": {
-        "name": "Batterie"
+        "name": "Batterie traqueur"
       },
       "last_refresh" : {
         "name": "Dernière mise à jour des données"
+      },
+      "bike_battery" : {
+        "name": "Batterie moto"
       }
     },
     "device_tracker" : {

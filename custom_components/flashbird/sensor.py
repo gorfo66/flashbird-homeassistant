@@ -6,6 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .entities.flashbird_mileage_entity import FlashbirdMileageEntity
 from .entities.flashbird_battery_entity import FlashbirdBatteryEntity
+from .entities.flashbird_bike_battery_entity import FlashbirdBikeBatteryEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ async def async_setup_entry(
         [
             FlashbirdMileageEntity(hass, entry),
             FlashbirdBatteryEntity(hass, entry),
+            FlashbirdBikeBatteryEntity(hass, entry),
         ],
         update_before_add=False,
     )

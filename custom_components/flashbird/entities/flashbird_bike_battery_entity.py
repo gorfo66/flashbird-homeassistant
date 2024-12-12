@@ -6,7 +6,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfLength
+from homeassistant.const import UnitOfElectricPotential
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -17,7 +17,7 @@ from ..data import FlashbirdConfigEntry
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
+class FlashbirdBikeBatteryEntity(CoordinatorEntity, SensorEntity):
     """References the total mileage e.g. the mileage"""
 
     _hass: HomeAssistant
@@ -35,24 +35,24 @@ class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + "_mileage"
-        self._attr_translation_key = "mileage"
+        self._attr_unique_id = self._config.entry_id + "_bike_battery"
+        self._attr_translation_key = "bike_battery"
 
     @property
     def icon(self) -> str | None:
-        return "mdi:counter"
+        return "mdi:car-battery"
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
-        return SensorDeviceClass.DISTANCE
+        return SensorDeviceClass.VOLTAGE
 
     @property
     def state_class(self) -> SensorStateClass | None:
-        return SensorStateClass.TOTAL_INCREASING
+        return SensorStateClass.MEASUREMENT
 
     @property
     def native_unit_of_measurement(self) -> str | None:
-        return UnitOfLength.KILOMETERS
+        return UnitOfElectricPotential.VOLT
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -62,7 +62,7 @@ class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-        distance = round(self.coordinator.data["statistics"]["totalDistance"] / 1000)
-        if self.native_value != distance:
-            self._attr_native_value = distance
+        newValue = round(self.coordinator.data["motorcycle"]["batteryVoltageInMillivolt"] / 1000, 2)
+        if self.native_value != newValue:
+            self._attr_native_value = newValue
             self.async_write_ha_state()
