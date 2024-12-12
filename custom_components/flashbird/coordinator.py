@@ -8,7 +8,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
 
-from .const import DOMAIN, REFRESH_RATE, CONF_TOKEN, CONF_TRACKER_ID, CONF_FIRMWARE_VERSION
+from .const import *
 
 from .helpers.flashbird_api import flashbird_get_device_info
 
@@ -61,6 +61,15 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
               newConfig = self.config_entry.data.copy()
               newConfig[CONF_FIRMWARE_VERSION] = firmwareVersion
               self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
+
+          # Update the serial of the smart key
+          serialKey = deviceInfo['smartKeys'][0]['serialNumber']
+          if (CONF_SERIAL_NUMBER_KEY not in self.config_entry.data or self.config_entry.data[CONF_SERIAL_NUMBER_KEY] != serialKey):
+              newConfig = self.config_entry.data.copy()
+              newConfig[CONF_SERIAL_NUMBER_KEY] = serialKey
+              self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
+
+          
 
           return deviceInfo
         except ValueError as err:

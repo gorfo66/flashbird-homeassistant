@@ -66,7 +66,10 @@
         "name": "Mileage"
       },
       "battery": {
-        "name": "Device Battery"
+        "name": "Battery"
+      },
+      "key_battery": {
+        "name": "Battery"
       },
       "last_refresh" : {
         "name": "Last refresh date"

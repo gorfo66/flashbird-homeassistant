@@ -11,6 +11,7 @@ PLATFORMS: list[Platform] = [
 ]
 
 CONF_SERIAL_NUMBER = "serial"
+CONF_SERIAL_NUMBER_KEY = "serial_key"
 CONF_TOKEN = "token"
 CONF_TRACKER_ID = "trackerId"
 CONF_MANUFACTURER = "manufacturer"

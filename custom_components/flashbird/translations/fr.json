@@ -66,7 +66,10 @@
         "name": "Kilométrage"
       },
       "battery": {
-        "name": "Batterie traqueur"
+        "name": "Batterie"
+      },
+      "key_battery": {
+        "name": "Batterie"
       },
       "last_refresh" : {
         "name": "Dernière mise à jour des données"
