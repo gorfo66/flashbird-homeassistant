@@ -88,10 +88,5 @@
     "invalid_token": {
       "message": "Vos identifiants sont invalides"
     }
-  },
-  "exception": {
-    "invalid_token": {
-      "message": "Vos identifiants sont invalides"
-    }
   }
 }

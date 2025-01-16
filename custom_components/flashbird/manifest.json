@@ -1,14 +1,14 @@
 {
-  "domain": "Flashbird",
+  "domain": "flashbird",
   "name": "Flashbird",
   "codeowners": [
-      "@gorfo"
+    "@gorfo66"
   ],
   "config_flow": true,
-  "documentation": "",
-  "issue_tracker": "",
+  "documentation": "https://github.com/gorfo66/flashbird-homeassistant",
   "integration_type": "device",
   "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/gorfo66/flashbird-homeassistant/issues",
   "quality_scale": "silver",
-  "version": "1.0.0-alpha"
+  "version": "1.0.0"
 }
