@@ -2,7 +2,7 @@ from homeassistant.const import Platform
 
 REFRESH_RATE = 300
 
-DOMAIN = "Flashbird"
+DOMAIN = "flashbird"
 PLATFORMS: list[Platform] = [
     Platform.SENSOR,
     Platform.BINARY_SENSOR,
