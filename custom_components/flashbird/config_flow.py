@@ -77,7 +77,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         """Get options flow for this handler"""
         return FlashbirdOptionsFlow(config_entry)
 
-    async def async_step_reauth(self) -> FlowResult:
+    async def async_step_reauth(self, entry_data) -> FlowResult:
         """Perform reauth upon an API authentication error."""
         return await self.async_step_reauth_confirm()
 
