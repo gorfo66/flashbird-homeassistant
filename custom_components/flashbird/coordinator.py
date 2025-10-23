@@ -63,12 +63,15 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
               self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
 
           # Update the serial of the smart key
-          serialKey = deviceInfo['smartKeys'][0]['serialNumber']
-          if (CONF_SERIAL_NUMBER_KEY not in self.config_entry.data or self.config_entry.data[CONF_SERIAL_NUMBER_KEY] != serialKey):
-              newConfig = self.config_entry.data.copy()
-              newConfig[CONF_SERIAL_NUMBER_KEY] = serialKey
-              self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
-
+          smartKeys = deviceInfo.get('smartKeys', [])
+          if smartKeys:
+            serialKey = smartKeys[0].get('serialNumber')
+            if (self.config_entry.data.get(CONF_SERIAL_NUMBER_KEY) != serialKey):
+                newConfig = self.config_entry.data.copy()
+                newConfig[CONF_SERIAL_NUMBER_KEY] = serialKey
+                self.hass.config_entries.async_update_entry(self.config_entry, data=newConfig)
+          else:
+            _LOGGER.debug("No smart keys found for this device.")
           
 
           return deviceInfo

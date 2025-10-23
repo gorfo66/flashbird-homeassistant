@@ -18,12 +18,20 @@ async def async_setup_entry(
     """Do the setup all the sensor entities."""
     _LOGGER.debug("Calling async_setup_entry entry=%s", entry.entry_id)
 
-    async_add_entities(
-        [
-            FlashbirdMileageEntity(hass, entry),
-            FlashbirdBatteryEntity(hass, entry),
-            FlashbirdBikeBatteryEntity(hass, entry),
-            FlashbirdKeyBatteryEntity(hass, entry)
-        ],
-        update_before_add=False,
-    )
+    coordinator = entry.runtime_data.coordinator
+    
+    entries = [
+      FlashbirdMileageEntity(hass, entry),
+      FlashbirdBatteryEntity(hass, entry),
+      FlashbirdBikeBatteryEntity(hass, entry)
+    ]
+
+    # Check if we have data for the smart key before to add it for creation
+    smartKeys = coordinator.data.get('smartKeys', []) if coordinator.data else []
+    if smartKeys:
+      entries.append(FlashbirdKeyBatteryEntity(hass, entry))
+    else:
+      _LOGGER.debug('No smart key found')
+
+    # Create the entities
+    async_add_entities(entries, update_before_add=False)

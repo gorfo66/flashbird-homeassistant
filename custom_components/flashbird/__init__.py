@@ -28,8 +28,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         coordinator=coordinator,
     )
 
+    # force the refresh before creation of the sensors, to create the smart key only if available
+    await coordinator.async_config_entry_first_refresh()
+    
+    # Create the sensors
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     # force the refresh at initialization. To get data from the begining
     await coordinator.async_config_entry_first_refresh()
+    
     return True

@@ -58,7 +58,10 @@ class FlashbirdKeyBatteryEntity(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug('refresh')
-        newValue = self.coordinator.data['smartKeys'][0]['batteryPercentage']
-        if self.native_value != newValue:
-            self._attr_native_value = newValue
-            self.async_write_ha_state()
+
+        smartKeys = self.coordinator.data.get('smartKeys', [])
+        if smartKeys:
+          newValue = smartKeys[0].get('batteryPercentage')
+          if self.native_value != newValue:
+              self._attr_native_value = newValue
+              self.async_write_ha_state()
