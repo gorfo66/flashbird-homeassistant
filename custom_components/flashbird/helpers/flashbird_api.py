@@ -1,6 +1,8 @@
 import logging
 
 import requests
+import json
+from .flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "https://pegase.api-smt.ovh/graphql"
@@ -47,7 +49,7 @@ def flashbird_find_device_id(token, serial) -> str:
     return None
 
 
-def flashbird_get_device_info(token, device_id):
+def flashbird_get_device_info(token, device_id) -> FlashbirdDeviceInfo:
     _LOGGER.info("Find device info from id " + device_id)
     payload = {
         "operationName": "Devices",
@@ -62,10 +64,12 @@ def flashbird_get_device_info(token, device_id):
         _LOGGER.error("Token expired")
         raise ValueError("invalid token")
 
-    return response["data"]["user"]["device"]
+    data = response["data"]["user"]["device"]
+    _LOGGER.debug(data)
+    return FlashbirdDeviceInfo(data)
 
 
-def flashbird_set_lock_enabled(token, device_id, status):
+def flashbird_set_lock_enabled(token, device_id, status) -> None:
     _LOGGER.info("Change lock status " + device_id)
     payload = {
         "operationName": "SetLockEnabled",

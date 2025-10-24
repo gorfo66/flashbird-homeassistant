@@ -10,8 +10,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..helpers.device_info import define_device_info
 from ..data import FlashbirdConfigEntry
+from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
+from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +28,6 @@ class FlashbirdConnectedEntity(CoordinatorEntity, BinarySensorEntity):
         hass: HomeAssistant,
         configEntry: FlashbirdConfigEntry,
     ) -> None:
-
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass
@@ -57,7 +57,9 @@ class FlashbirdConnectedEntity(CoordinatorEntity, BinarySensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-        isConnected = self.coordinator.data["status"]["isConnectedToGSM"]
-        if self.is_on != isConnected:
-            self._attr_is_on = isConnected
-            self.async_write_ha_state()
+        device_info: FlashbirdDeviceInfo = self.coordinator.data
+        isConnected = device_info.is_connected_to_gsm()
+        if isConnected is not None:
+            if self.is_on != isConnected:
+                self._attr_is_on = isConnected
+                self.async_write_ha_state()

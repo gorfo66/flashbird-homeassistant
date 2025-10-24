@@ -7,9 +7,10 @@ from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from ..const import CONF_TOKEN, CONF_TRACKER_ID
+from ..data import FlashbirdConfigEntry
+from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
 from ..helpers.device_info import define_device_info
 from ..helpers.flashbird_api import flashbird_set_lock_enabled
-from ..data import FlashbirdConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,7 +26,6 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
         hass: HomeAssistant,
         configEntry: FlashbirdConfigEntry,
     ) -> None:
-
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass
@@ -50,12 +50,14 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-        isLocked = self.coordinator.data["lockEnabled"]
-        if self.is_locked != isLocked:
-            self._attr_is_locked = isLocked
-            self._attr_is_locking = False
-            self._attr_is_unlocking = False
-            self.async_write_ha_state()
+        device_info: FlashbirdDeviceInfo = self.coordinator.data
+        isLocked = device_info.is_lock_enabled()
+        if isLocked is not None:
+            if self.is_locked != isLocked:
+                self._attr_is_locked = isLocked
+                self._attr_is_locking = False
+                self._attr_is_unlocking = False
+                self.async_write_ha_state()
 
     async def async_lock(self, **kwargs):
         _LOGGER.debug("lock")
@@ -65,7 +67,7 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            True
+            True,
         )
         await self.coordinator.async_request_refresh()
 
@@ -77,6 +79,6 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            False
+            False,
         )
         await self.coordinator.async_request_refresh()

@@ -1,7 +1,9 @@
-from homeassistant.loader import Integration
 from dataclasses import dataclass
-from .coordinator import FlashbirdDataUpdateCoordinator
+
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.loader import Integration
+
+from .coordinator import FlashbirdDataUpdateCoordinator
 
 type FlashbirdConfigEntry = ConfigEntry[FlashbirdData]
 
