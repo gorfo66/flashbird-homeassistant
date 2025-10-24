@@ -10,7 +10,7 @@ def define_device_info(configEntry: ConfigEntry) -> DeviceInfo:
         identifiers={(DOMAIN, configEntry.entry_id)},
         name=configEntry.data[CONF_SERIAL_NUMBER],
         manufacturer="SMT Performances",
-        model="Flashbird",
+        model=configEntry.data[CONF_MODEL],
         serial_number=configEntry.data[CONF_SERIAL_NUMBER],
     )
 
@@ -20,9 +20,6 @@ def define_device_info(configEntry: ConfigEntry) -> DeviceInfo:
     if CONF_FIRMWARE_VERSION in configEntry.data:
         device.update(sw_version=configEntry.data[CONF_FIRMWARE_VERSION])
     
-    if CONF_MODEL in configEntry.data:
-        device.update(model=configEntry.data[CONF_MODEL])
-
     return device
 
 
