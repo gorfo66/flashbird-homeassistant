@@ -64,8 +64,8 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         self._config[CONF_TOKEN] = token
         self._config[CONF_SERIAL_NUMBER] = serial
         self._config[CONF_TRACKER_ID] = trackerId
-        self._config[CONF_MANUFACTURER] = device_info["motorcycle"]["brand"]["label"]
-        self._config[CONF_MODEL] = device_info["motorcycle"]["model"]["label"]
+        self._config[CONF_MANUFACTURER] = "SMT Performances"
+        self._config[CONF_MODEL] = device_info.get_device_type().capitalize()
         self._config[CONF_NAME] = user_input["name"]
         self._config[CONF_FIRMWARE_VERSION] = ""
 
