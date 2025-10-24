@@ -11,8 +11,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..helpers.device_info import define_device_info
 from ..data import FlashbirdConfigEntry
+from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
+from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,12 +24,7 @@ class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
     _hass: HomeAssistant
     _config: ConfigEntry
 
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        configEntry: FlashbirdConfigEntry
-    ) -> None:
-
+    def __init__(self, hass: HomeAssistant, configEntry: FlashbirdConfigEntry) -> None:
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass
@@ -62,7 +58,10 @@ class FlashbirdMileageEntity(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-        distance = round(self.coordinator.data["statistics"]["totalDistance"] / 1000)
-        if self.native_value != distance:
-            self._attr_native_value = distance
-            self.async_write_ha_state()
+        device_info: FlashbirdDeviceInfo = self.coordinator.data
+        totalDistance = device_info.get_total_distance()
+        if totalDistance is not None:
+            distance = round(totalDistance / 1000)
+            if self.native_value != distance:
+                self._attr_native_value = distance
+                self.async_write_ha_state()

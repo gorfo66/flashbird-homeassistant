@@ -4,10 +4,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entities.flashbird_mileage_entity import FlashbirdMileageEntity
 from .entities.flashbird_battery_entity import FlashbirdBatteryEntity
 from .entities.flashbird_bike_battery_entity import FlashbirdBikeBatteryEntity
 from .entities.flashbird_key_battery_entity import FlashbirdKeyBatteryEntity
+from .entities.flashbird_mileage_entity import FlashbirdMileageEntity
+from .helpers.flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,20 +19,31 @@ async def async_setup_entry(
     """Do the setup all the sensor entities."""
     _LOGGER.debug("Calling async_setup_entry entry=%s", entry.entry_id)
 
-    coordinator = entry.runtime_data.coordinator
+    device_info: FlashbirdDeviceInfo = entry.runtime_data.coordinator.data
     
-    entries = [
-      FlashbirdMileageEntity(hass, entry),
-      FlashbirdBatteryEntity(hass, entry),
-      FlashbirdBikeBatteryEntity(hass, entry)
-    ]
+
+    entries = []
+
+    # Mileage is always present
+    entries.append(FlashbirdMileageEntity(hass, entry))
 
     # Check if we have data for the smart key before to add it for creation
-    smartKeys = coordinator.data.get('smartKeys', []) if coordinator.data else []
-    if smartKeys:
-      entries.append(FlashbirdKeyBatteryEntity(hass, entry))
+    if device_info.get_smart_keys():
+        entries.append(FlashbirdKeyBatteryEntity(hass, entry))
     else:
-      _LOGGER.debug('No smart key found')
+        _LOGGER.debug("No smart key found")
+
+    # Check if we have motorbike battery voltage before to add the sensor
+    if device_info.get_motorcycle_battery_voltage():
+        entries.append(FlashbirdBikeBatteryEntity(hass, entry))
+    else:
+        _LOGGER.debug("No motorbike battery voltage found")
+
+    # Check if we have tracker battery percentage before to add the sensor
+    if device_info.get_battery_percentage():
+        entries.append(FlashbirdBatteryEntity(hass, entry))
+    else:
+        _LOGGER.debug("No tracker battery information found")
 
     # Create the entities
     async_add_entities(entries, update_before_add=False)

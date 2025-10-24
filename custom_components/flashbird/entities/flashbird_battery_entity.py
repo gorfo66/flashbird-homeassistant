@@ -10,8 +10,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..helpers.device_info import define_device_info
 from ..data import FlashbirdConfigEntry
+from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
+from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +28,6 @@ class FlashbirdBatteryEntity(CoordinatorEntity, SensorEntity):
         hass: HomeAssistant,
         configEntry: FlashbirdConfigEntry,
     ) -> None:
-
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass
@@ -48,7 +48,7 @@ class FlashbirdBatteryEntity(CoordinatorEntity, SensorEntity):
 
     @property
     def native_unit_of_measurement(self) -> str | None:
-        return '%'
+        return "%"
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -57,8 +57,10 @@ class FlashbirdBatteryEntity(CoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        _LOGGER.debug('refresh')
-        newValue = self.coordinator.data['batteryPercentage']
-        if self.native_value != newValue:
-            self._attr_native_value = newValue
-            self.async_write_ha_state()
+        _LOGGER.debug("refresh")
+        device_info: FlashbirdDeviceInfo = self.coordinator.data
+        new_value = device_info.get_battery_percentage()
+        if new_value is not None:
+            if self.native_value != new_value:
+                self._attr_native_value = new_value
+                self.async_write_ha_state()

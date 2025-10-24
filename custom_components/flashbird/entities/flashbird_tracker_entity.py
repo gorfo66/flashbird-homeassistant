@@ -6,8 +6,9 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..helpers.device_info import define_device_info
 from ..data import FlashbirdConfigEntry
+from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
+from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,7 +24,6 @@ class FlashbirdTrackerEntity(CoordinatorEntity, TrackerEntity):
         hass: HomeAssistant,
         configEntry: FlashbirdConfigEntry,
     ) -> None:
-
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass
@@ -47,10 +47,12 @@ class FlashbirdTrackerEntity(CoordinatorEntity, TrackerEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
-        longitude = self.coordinator.data["longitude"]
-        latitude = self.coordinator.data["latitude"]
+        device_info: FlashbirdDeviceInfo = self.coordinator.data
+        longitude = device_info.get_longitude()
+        latitude = device_info.get_latitude()
 
-        if longitude != self.longitude or latitude != self.latitude:
-            self._attr_longitude = longitude
-            self._attr_latitude = latitude
-            self.async_write_ha_state()
+        if longitude is not None and latitude is not None:
+            if longitude != self.longitude or latitude != self.latitude:
+                self._attr_longitude = longitude
+                self._attr_latitude = latitude
+                self.async_write_ha_state()

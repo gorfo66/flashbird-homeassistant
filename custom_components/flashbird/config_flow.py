@@ -58,16 +58,16 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
                 translation_placeholders=None,
             )
 
-        deviceInfo = await self.hass.async_add_executor_job(
+        device_info = await self.hass.async_add_executor_job(
             flashbird_get_device_info, token, trackerId
         )
         self._config[CONF_TOKEN] = token
         self._config[CONF_SERIAL_NUMBER] = serial
         self._config[CONF_TRACKER_ID] = trackerId
-        self._config[CONF_MANUFACTURER] = deviceInfo["motorcycle"]["brand"]["label"]
-        self._config[CONF_MODEL] = deviceInfo["motorcycle"]["model"]["label"]
-        self._config[CONF_NAME] = user_input['name']
-        self._config[CONF_FIRMWARE_VERSION] = ''
+        self._config[CONF_MANUFACTURER] = device_info["motorcycle"]["brand"]["label"]
+        self._config[CONF_MODEL] = device_info["motorcycle"]["model"]["label"]
+        self._config[CONF_NAME] = user_input["name"]
+        self._config[CONF_FIRMWARE_VERSION] = ""
 
         return self.async_create_entry(title=serial, data=self._config)
 
@@ -81,7 +81,9 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
         """Perform reauth upon an API authentication error."""
         return await self.async_step_reauth_confirm()
 
-    async def async_step_reauth_confirm(self, user_input: dict | None = None) -> FlowResult:
+    async def async_step_reauth_confirm(
+        self, user_input: dict | None = None
+    ) -> FlowResult:
         """Dialog that informs the user that reauth is required."""
         reauth_form = vol.Schema(
             {
@@ -92,7 +94,9 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
 
         # if no data, show the form
         if user_input is None:
-            return self.async_show_form(step_id="reauth_confirm", data_schema=reauth_form)
+            return self.async_show_form(
+                step_id="reauth_confirm", data_schema=reauth_form
+            )
 
         # process the data
         try:
@@ -102,8 +106,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
             newConfig = self._config.data.copy()
             newConfig[CONF_TOKEN] = token
 
-            self.hass.config_entries.async_update_entry(
-                self._config, data=newConfig)
+            self.hass.config_entries.async_update_entry(self._config, data=newConfig)
             return self.async_update_reload_and_abort(title=None, data=None)
         except ValueError:
             raise HomeAssistantError(
@@ -139,8 +142,7 @@ class FlashbirdOptionsFlow(OptionsFlow):
             newConfig = self._config.data.copy()
             newConfig[CONF_TOKEN] = token
 
-            self.hass.config_entries.async_update_entry(
-                self._config, data=newConfig)
+            self.hass.config_entries.async_update_entry(self._config, data=newConfig)
             return self.async_create_entry(title=None, data=None)
         except ValueError:
             raise HomeAssistantError(
