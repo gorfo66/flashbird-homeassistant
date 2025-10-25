@@ -2,6 +2,7 @@
 SMT Performance is a French company that delivers a motor bike tracker called "Flashbird".
 You can have more inforamtion regarding this brand here: [https://smtperformances.fr/](https://smtperformances.fr/)
 
+
 ## The sensors
 The integration provides several sensors:
 - tracker : exposes the GPS coordinate of the tracker
@@ -11,6 +12,12 @@ The integration provides several sensors:
 - battery level: exposes the current battery level of the tracker
 - bike battery: exposes the battery voltage of the bike
 - smartKey battery: exposes the battery level of the Smart key associated to the tracker
+
+### How it looks like in Home assistant
+![home](doc/home.png)
+![home](doc/tracker.png)
+![home](doc/smartkey.png)
+
 
 ## Polling information
 The value of each sensor is polled from the Flashbird server each 5 minutes.
