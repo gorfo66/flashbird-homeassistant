@@ -76,7 +76,7 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            True
+            True,
         )
 
     async def async_unlock(self, **kwargs) -> None:
@@ -88,5 +88,5 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             flashbird_set_lock_enabled,
             self._config.data[CONF_TOKEN],
             self._config.data[CONF_TRACKER_ID],
-            False
+            False,
         )
