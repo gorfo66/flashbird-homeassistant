@@ -1,3 +1,5 @@
+"""Data structures for Flashbird integration."""
+
 from dataclasses import dataclass
 
 from homeassistant.config_entries import ConfigEntry

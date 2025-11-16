@@ -26,6 +26,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
+    """Coordinator for Flashbird data updates from the API and WebSocket."""
+
     def __init__(self, hass: HomeAssistant) -> None:
         """Initialize the data update coordinator."""
         _LOGGER.debug("init")

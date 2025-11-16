@@ -5,22 +5,25 @@ import logging
 import ssl
 from collections.abc import Callable
 
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
 
 from custom_components.flashbird.const import CONF_TOKEN, CONF_TRACKER_ID
-from custom_components.flashbird.helpers.flashbird_device_info import FlashbirdDeviceInfo
-from custom_components.flashbird.helpers.graphql_ws_client import GraphQLTransportWSClient
+from custom_components.flashbird.helpers.flashbird_device_info import (
+    FlashbirdDeviceInfo,
+)
+from custom_components.flashbird.helpers.graphql_ws_client import (
+    GraphQLTransportWSClient,
+)
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "wss://pegase.api-smt.ovh/graphql"
 
 
 def flashbird_ws_register(
-        hass: HomeAssistant, 
-        config_entry: ConfigEntry, 
-        callback: Callable) -> None:
+    hass: HomeAssistant, config_entry: ConfigEntry, callback: Callable
+) -> None:
     """
     Register the websocket and stream the data.
 

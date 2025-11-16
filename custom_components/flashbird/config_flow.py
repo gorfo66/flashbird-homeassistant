@@ -119,10 +119,10 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
             token = await self.hass.async_add_executor_job(
                 flashbird_get_token, user_input["email"], user_input["password"]
             )
-            newConfig = self._config.data.copy()
-            newConfig[CONF_TOKEN] = token
+            new_config = self._config.data.copy()
+            new_config[CONF_TOKEN] = token
 
-            self.hass.config_entries.async_update_entry(self._config, data=newConfig)
+            self.hass.config_entries.async_update_entry(self._config, data=new_config)
             return self.async_update_reload_and_abort(title=None, data=None)
         except ValueError:
             raise HomeAssistantError(

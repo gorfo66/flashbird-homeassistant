@@ -1,33 +1,21 @@
-import logging
-from typing import TYPE_CHECKING
+"""Entity for the last refresh timestamp from API/WS."""
 
-from homeassistant.components.sensor import (
-    SensorDeviceClass,
-    SensorEntity,
-)
-from homeassistant.config_entries import ConfigEntry
+import logging
+
+from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import EntityCategory
-from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.core import HomeAssistant
 
 from custom_components.flashbird.data import FlashbirdConfigEntry
-from custom_components.flashbird.helpers.device_info import define_device_info
-
-if TYPE_CHECKING:
-    from custom_components.flashbird.helpers.flashbird_device_info import (
-        FlashbirdDeviceInfo,
-    )
+from custom_components.flashbird.entities.abstract_flashbird_sensor_entity import (
+    AbstractFlashbirdSensorEntity,
+)
 
 
-_LOGGER = logging.getLogger(__name__)
-
-
-class FlashbirdLastRefreshEntity(CoordinatorEntity, SensorEntity):
+class FlashbirdLastRefreshEntity(AbstractFlashbirdSensorEntity):
     """The last refresh from API / WS timestamp."""
 
-    _hass: HomeAssistant
-    _config: ConfigEntry
+    _logger = logging.getLogger(__name__)
 
     def __init__(
         self,
@@ -35,35 +23,21 @@ class FlashbirdLastRefreshEntity(CoordinatorEntity, SensorEntity):
         config_entry: FlashbirdConfigEntry,
     ) -> None:
         """Create the last refresh entity."""
-        super().__init__(config_entry.runtime_data.coordinator)
-        self._hass = hass
-        self._config = config_entry
-
-        self._attr_has_entity_name = True
+        super().__init__(hass, config_entry)
         self._attr_unique_id = self._config.entry_id + "_last_refresh"
         self._attr_translation_key = "last_refresh"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def icon(self) -> str | None:
+        """Return the icon for the entity."""
         return "mdi:update"
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
+        """Return the device class."""
         return SensorDeviceClass.TIMESTAMP
 
-    @property
-    def device_info(self) -> DeviceInfo:
-        return define_device_info(self._config)
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        _LOGGER.debug("refresh")
-
-        device_info: FlashbirdDeviceInfo = self.coordinator.data
-        new_value = device_info.get_last_refresh()
-        if new_value is not None:
-            if self.native_value != new_value:
-                self._attr_native_value = new_value
-                self.async_write_ha_state()
+    def _get_updated_data(self) -> str:
+        """Return the last refresh timestamp from the device info."""
+        return self._get_flashbird_device_info().get_last_refresh()

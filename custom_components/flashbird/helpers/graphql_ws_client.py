@@ -1,3 +1,5 @@
+"""GraphQL WebSocket client for Flashbird subscriptions."""
+
 import asyncio
 import json
 import logging
@@ -165,7 +167,7 @@ class GraphQLTransportWSClient:
                 )
             )
 
-    async def subscribe(self, query: str, variables: dict = {}):
+    async def subscribe(self, query: str, variables=None):
         """Async generator for subscriptions with auto re-subscribe."""
         _LOGGER.debug("subscribe")
         if not self.connected:

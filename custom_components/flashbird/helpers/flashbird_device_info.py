@@ -1,3 +1,5 @@
+"""Class wraps the JSON structure returned by the API."""
+
 from datetime import UTC, datetime
 
 
@@ -5,7 +7,7 @@ class FlashbirdDeviceInfo:
     """Class wraps the JSON structure returned by the API."""
 
     def __init__(self, data: dict) -> None:
-        """Creates the class."""
+        """Create the class."""
         self.data = data or {}
         self.timestamp = datetime.now(UTC)
 
@@ -58,14 +60,14 @@ class FlashbirdDeviceInfo:
         return self.data.get("motorcycle", {}).get("batteryVoltageInMillivolt")
 
     def get_total_distance(self) -> int:
-        """Return device.statistics.totalDistance."""
+        """Return device.statistics.totalDistance in meter."""
         return self.data.get("statistics", {}).get("totalDistance")
 
     def get_total_time(self) -> int:
         """Return device.statistics.totalTime."""
         return self.data.get("statistics", {}).get("totalTime")
 
-    def get_smart_keys(self):
+    def get_smart_keys(self) -> list | None:
         """Return device.smartKeys."""
         return self.data.get("smartKeys", {})
 

@@ -1,3 +1,5 @@
+"""Entity for the alert lock, allowing lock/unlock and status display."""
+
 import logging
 from typing import TYPE_CHECKING
 
@@ -19,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
-    """References the alert lock. Allows to lock/unlock the alerts and display the status"""
+    """References the alert lock. Allows to lock/unlock the alerts and display the status."""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -27,13 +29,13 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: FlashbirdConfigEntry,
+        config_entry: FlashbirdConfigEntry,
     ) -> None:
         """Create the class."""
-        super().__init__(configEntry.runtime_data.coordinator)
+        super().__init__(config_entry.runtime_data.coordinator)
 
         self._hass = hass
-        self._config = configEntry
+        self._config = config_entry
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + "_lock"
@@ -44,10 +46,12 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
 
     @property
     def icon(self) -> str | None:
+        """Return the icon for the entity."""
         return "mdi:shield-lock-outline"
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device info for the entity."""
         return define_device_info(self._config)
 
     @callback
@@ -55,15 +59,16 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
         """Handle updated data from the coordinator."""
         _LOGGER.debug("refresh")
         device_info: FlashbirdDeviceInfo = self.coordinator.data
-        isLocked = device_info.is_lock_enabled()
-        if isLocked is not None:
-            if self.is_locked != isLocked:
-                self._attr_is_locked = isLocked
+        is_locked = device_info.is_lock_enabled()
+        if is_locked is not None:
+            if self.is_locked != is_locked:
+                self._attr_is_locked = is_locked
                 self._attr_is_locking = False
                 self._attr_is_unlocking = False
                 self.async_write_ha_state()
 
-    async def async_lock(self, **kwargs):
+    async def async_lock(self, **kwargs) -> None:
+        """Lock the entity."""
         _LOGGER.debug("lock")
         self._attr_is_locking = True
         self.async_write_ha_state()
@@ -74,7 +79,8 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             True,
         )
 
-    async def async_unlock(self, **kwargs):
+    async def async_unlock(self, **kwargs) -> None:
+        """Unlock the entity."""
         _LOGGER.debug("unlock")
         self._attr_is_unlocking = True
         self.async_write_ha_state()

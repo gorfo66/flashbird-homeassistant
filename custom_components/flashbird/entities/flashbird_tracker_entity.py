@@ -1,3 +1,5 @@
+"""Entity for the device tracker position."""
+
 import logging
 from typing import TYPE_CHECKING
 
@@ -43,10 +45,12 @@ class FlashbirdTrackerEntity(CoordinatorEntity, TrackerEntity):
 
     @property
     def icon(self) -> str | None:
+        """Return the icon for the entity."""
         return "mdi:map-marker"
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device info for the entity."""
         return define_device_info(self._config)
 
     @callback
