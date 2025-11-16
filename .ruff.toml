@@ -15,6 +15,7 @@ ignore = [
     "COM812", # incompatible with formatter
     "ISC001", # incompatible with formatter
     "E501", # line too long
+    "EM101" # line too long
 ]
 
 [lint.flake8-pytest-style]

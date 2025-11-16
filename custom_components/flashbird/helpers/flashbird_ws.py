@@ -80,14 +80,14 @@ def flashbird_ws_register(
             await client.close()
             raise
 
-    async def start_ws(event) -> None:
+    async def start_ws(_: object) -> None:
         _LOGGER.debug("start websocket task")
 
         # Create a background task for the websocket
         task = hass.async_create_task(run_ws())
         task_holder["task"] = task
 
-    async def stop_ws(event) -> None:
+    async def stop_ws(_: object) -> None:
         _LOGGER.debug("stop websocket task")
         task = task_holder.get("task")
         if task:

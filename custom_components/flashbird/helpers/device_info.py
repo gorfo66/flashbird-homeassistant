@@ -3,7 +3,14 @@
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
 
-from ..const import *
+from custom_components.flashbird.const import (
+    CONF_FIRMWARE_VERSION,
+    CONF_MODEL,
+    CONF_NAME,
+    CONF_SERIAL_NUMBER,
+    CONF_SERIAL_NUMBER_KEY,
+    DOMAIN,
+)
 
 
 def define_device_info(config_entry: ConfigEntry) -> DeviceInfo:

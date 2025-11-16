@@ -129,7 +129,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
                 translation_domain=DOMAIN,
                 translation_key="invalid_token",
                 translation_placeholders=None,
-            )
+            ) from None
 
 
 class FlashbirdOptionsFlow(OptionsFlow):

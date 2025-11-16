@@ -18,14 +18,12 @@ if TYPE_CHECKING:
     )
 
 
-_LOGGER = logging.getLogger(__name__)
-
-
 class FlashbirdTrackerEntity(CoordinatorEntity, TrackerEntity):
     """Refers to the tracker position."""
 
     _hass: HomeAssistant
     _config: ConfigEntry
+    _logger = logging.getLogger(__name__)
 
     def __init__(
         self,
@@ -56,7 +54,7 @@ class FlashbirdTrackerEntity(CoordinatorEntity, TrackerEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        _LOGGER.debug("refresh")
+        self._logger.debug("refresh")
         device_info: FlashbirdDeviceInfo = self.coordinator.data
         longitude = device_info.get_longitude()
         latitude = device_info.get_latitude()

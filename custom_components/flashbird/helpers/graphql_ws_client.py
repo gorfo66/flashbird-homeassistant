@@ -167,7 +167,7 @@ class GraphQLTransportWSClient:
                 )
             )
 
-    async def subscribe(self, query: str, variables=None):
+    async def subscribe(self, query: str, variables: dict | None = None) -> object:
         """Async generator for subscriptions with auto re-subscribe."""
         _LOGGER.debug("subscribe")
         if not self.connected:
