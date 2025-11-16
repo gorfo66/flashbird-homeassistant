@@ -7,17 +7,20 @@ from collections.abc import Callable
 
 from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, EVENT_HOMEASSISTANT_STOP
 from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 
-from .flashbird_device_info import FlashbirdDeviceInfo
-from .graphql_ws_client import GraphQLTransportWSClient
+from custom_components.flashbird.const import CONF_TOKEN, CONF_TRACKER_ID
+from custom_components.flashbird.helpers.flashbird_device_info import FlashbirdDeviceInfo
+from custom_components.flashbird.helpers.graphql_ws_client import GraphQLTransportWSClient
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "wss://pegase.api-smt.ovh/graphql"
 
 
 def flashbird_ws_register(
-    hass: HomeAssistant, token: str, device_id: str, callback: Callable
-) -> None:
+        hass: HomeAssistant, 
+        config_entry: ConfigEntry, 
+        callback: Callable) -> None:
     """
     Register the websocket and stream the data.
 
@@ -32,10 +35,12 @@ def flashbird_ws_register(
 
     client_holder = {"client": None}
     task_holder = {"task": None}
+    device_id = config_entry.data[CONF_TRACKER_ID]
 
     async def run_ws() -> None:
         ssl_context = await hass.async_add_executor_job(ssl.create_default_context)
-        client = GraphQLTransportWSClient(API_URL, token, ssl_context)
+        current_token = config_entry.data[CONF_TOKEN]
+        client = GraphQLTransportWSClient(API_URL, current_token, ssl_context)
         client_holder["client"] = client
 
         await client.connect()
@@ -48,7 +53,6 @@ def flashbird_ws_register(
                     deviceType serialNumber batteryPercentage
                     status { isConnectedToGSM lastPollingTimestamp }
                     motorcycle {
-                        id
                         brand { label }
                         model { label }
                         batteryVoltageInMillivolt

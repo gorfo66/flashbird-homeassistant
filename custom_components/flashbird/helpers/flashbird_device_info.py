@@ -45,10 +45,6 @@ class FlashbirdDeviceInfo:
         """Return device.status.isConnectedToGSM."""
         return self.data.get("status", {}).get("isConnectedToGSM")
 
-    def get_motorcycle_id(self) -> str:
-        """Return device.motorcycle.id."""
-        return self.data.get("motorcycle", {}).get("id")
-
     def get_motorcycle_brand(self) -> str:
         """Return device.motorcycle.brand.label."""
         return self.data.get("motorcycle", {}).get("brand", {}).get("label")

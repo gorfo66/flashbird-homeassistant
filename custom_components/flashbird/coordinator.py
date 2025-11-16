@@ -40,8 +40,7 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
 
         flashbird_ws_register(
             self.hass,
-            self.config_entry.data[CONF_TOKEN],
-            self.config_entry.data[CONF_TRACKER_ID],
+            self.config_entry,
             self.websocket_callback,
         )
 

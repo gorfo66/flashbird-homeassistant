@@ -61,7 +61,6 @@ def flashbird_get_device_info(token: str, device_id: str) -> FlashbirdDeviceInfo
                   deviceType serialNumber batteryPercentage 
                   status { isConnectedToGSM lastPollingTimestamp } 
                   motorcycle { 
-                    id 
                     brand { label } 
                     model { label } 
                     batteryVoltageInMillivolt 
