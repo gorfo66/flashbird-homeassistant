@@ -6,9 +6,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.loader import async_get_loaded_integration
 
-from .const import DOMAIN, PLATFORMS
-from .coordinator import FlashbirdDataUpdateCoordinator
-from .data import FlashbirdData
+from custom_components.flashbird.const import DOMAIN, PLATFORMS
+from custom_components.flashbird.coordinator import FlashbirdDataUpdateCoordinator
+from custom_components.flashbird.data import FlashbirdData
 
 _LOGGER = logging.getLogger(__name__)
 
