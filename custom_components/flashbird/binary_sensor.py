@@ -1,10 +1,14 @@
+"""Instantiate binary sensor entities."""
+
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entities.flashbird_is_connected_entity import FlashbirdConnectedEntity
+from custom_components.flashbird.entities.flashbird_is_connected_entity import (
+    FlashbirdConnectedEntity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 

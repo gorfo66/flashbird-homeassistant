@@ -19,7 +19,7 @@ def define_device_info(configEntry: ConfigEntry) -> DeviceInfo:
 
     if CONF_FIRMWARE_VERSION in configEntry.data:
         device.update(sw_version=configEntry.data[CONF_FIRMWARE_VERSION])
-    
+
     return device
 
 

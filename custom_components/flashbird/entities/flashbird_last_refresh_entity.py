@@ -1,4 +1,5 @@
 import logging
+from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -10,15 +11,20 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..data import FlashbirdConfigEntry
-from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
-from ..helpers.device_info import define_device_info
+from custom_components.flashbird.data import FlashbirdConfigEntry
+from custom_components.flashbird.helpers.device_info import define_device_info
+
+if TYPE_CHECKING:
+    from custom_components.flashbird.helpers.flashbird_device_info import (
+        FlashbirdDeviceInfo,
+    )
+
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class FlashbirdLastRefreshEntity(CoordinatorEntity, SensorEntity):
-    """ References the last refresh from API / WS timestamp """
+    """The last refresh from API / WS timestamp."""
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -26,12 +32,12 @@ class FlashbirdLastRefreshEntity(CoordinatorEntity, SensorEntity):
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: FlashbirdConfigEntry,
+        config_entry: FlashbirdConfigEntry,
     ) -> None:
-        super().__init__(configEntry.runtime_data.coordinator)
-
+        """Create the last refresh entity."""
+        super().__init__(config_entry.runtime_data.coordinator)
         self._hass = hass
-        self._config = configEntry
+        self._config = config_entry
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + "_last_refresh"

@@ -1,7 +1,7 @@
 import logging
 
 import requests
-import json
+
 from .flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def flashbird_get_token(login: str, password: str) -> str:
     return response["data"]["createUserOrSignInWithEmailAndPassword"]["token"]
 
 
-def flashbird_find_device_id(token, serial) -> str:
+def flashbird_find_device_id(token: str, serial: str) -> str:
     _LOGGER.info("Find device id from serial " + serial)
     payload = {
         "operationName": "Devices",
@@ -49,7 +49,7 @@ def flashbird_find_device_id(token, serial) -> str:
     return None
 
 
-def flashbird_get_device_info(token, device_id) -> FlashbirdDeviceInfo:
+def flashbird_get_device_info(token: str, device_id: str) -> FlashbirdDeviceInfo:
     _LOGGER.info("Find device info from id " + device_id)
     payload = {
         "operationName": "Devices",
@@ -57,7 +57,7 @@ def flashbird_get_device_info(token, device_id) -> FlashbirdDeviceInfo:
             query Devices($deviceId: ID!) { 
               user { 
                 device(id: $deviceId) { 
-                  id softVersion activated latitude longitude lockEnabled 
+                  id softVersion latitude longitude lockEnabled 
                   deviceType serialNumber batteryPercentage 
                   status { isConnectedToGSM lastPollingTimestamp } 
                   motorcycle { 
@@ -87,7 +87,7 @@ def flashbird_get_device_info(token, device_id) -> FlashbirdDeviceInfo:
     return FlashbirdDeviceInfo(data)
 
 
-def flashbird_set_lock_enabled(token, device_id, status) -> None:
+def flashbird_set_lock_enabled(token: str, device_id: str, status: bool) -> None:
     _LOGGER.info("Change lock status " + device_id)
     payload = {
         "operationName": "SetLockEnabled",

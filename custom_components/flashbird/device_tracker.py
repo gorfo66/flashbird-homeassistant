@@ -1,10 +1,14 @@
+"""Instantiate device tracker entities."""
+
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entities.flashbird_tracker_entity import FlashbirdTrackerEntity
+from custom_components.flashbird.entities.flashbird_tracker_entity import (
+    FlashbirdTrackerEntity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 

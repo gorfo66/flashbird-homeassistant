@@ -1,10 +1,14 @@
+"""Instantiate lock entities."""
+
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .entities.flashbird_lock_entity import FlashbirdLockEntity
+from custom_components.flashbird.entities.flashbird_lock_entity import (
+    FlashbirdLockEntity,
+)
 
 _LOGGER = logging.getLogger(__name__)
 

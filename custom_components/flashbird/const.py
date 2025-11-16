@@ -1,3 +1,5 @@
+"""Constants for the Flashbird integration."""
+
 from homeassistant.const import Platform
 
 REFRESH_RATE = 3600

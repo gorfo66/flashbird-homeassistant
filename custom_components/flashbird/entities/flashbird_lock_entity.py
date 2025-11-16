@@ -1,4 +1,5 @@
 import logging
+from typing import TYPE_CHECKING
 
 from homeassistant.components.lock import LockEntity
 from homeassistant.config_entries import ConfigEntry
@@ -6,11 +7,13 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..const import CONF_TOKEN, CONF_TRACKER_ID
-from ..data import FlashbirdConfigEntry
-from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
-from ..helpers.device_info import define_device_info
-from ..helpers.flashbird_api import flashbird_set_lock_enabled
+from custom_components.flashbird.const import CONF_TOKEN, CONF_TRACKER_ID
+from custom_components.flashbird.data import FlashbirdConfigEntry
+from custom_components.flashbird.helpers.device_info import define_device_info
+from custom_components.flashbird.helpers.flashbird_api import flashbird_set_lock_enabled
+
+if TYPE_CHECKING:
+    from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,6 +29,7 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
         hass: HomeAssistant,
         configEntry: FlashbirdConfigEntry,
     ) -> None:
+        """Create the class."""
         super().__init__(configEntry.runtime_data.coordinator)
 
         self._hass = hass

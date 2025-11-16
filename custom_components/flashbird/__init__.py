@@ -1,4 +1,4 @@
-"""Initialisation du package de l'intégration HACS Tuto"""
+"""Initialisation du package de l'intégration HACS Tuto."""
 
 import logging
 
@@ -14,6 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up a config entry for Flashbird."""
     _LOGGER.debug("async_setup_entry entry_id='%s'", entry.entry_id)
 
     hass.data.setdefault(DOMAIN, {})
@@ -24,7 +25,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         coordinator=coordinator,
     )
 
-    # force the refresh before creation of the sensors, to create the smart key only if available
+    # Force the refresh before creation of the sensors, to create the smart key only if available
+
     await coordinator.async_config_entry_first_refresh()
 
     # Create the sensors
