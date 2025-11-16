@@ -72,7 +72,7 @@
         "name": "Battery"
       },
       "last_refresh" : {
-        "name": "Last refresh date"
+        "name": "Last refresh"
       },
       "bike_battery" : {
         "name": "Bike battery"

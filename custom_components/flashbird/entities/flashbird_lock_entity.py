@@ -69,7 +69,6 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             self._config.data[CONF_TRACKER_ID],
             True,
         )
-        await self.coordinator.async_request_refresh()
 
     async def async_unlock(self, **kwargs):
         _LOGGER.debug("unlock")
@@ -81,4 +80,3 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             self._config.data[CONF_TRACKER_ID],
             False,
         )
-        await self.coordinator.async_request_refresh()

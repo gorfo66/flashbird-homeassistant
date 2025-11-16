@@ -8,6 +8,7 @@ from .entities.flashbird_battery_entity import FlashbirdBatteryEntity
 from .entities.flashbird_bike_battery_entity import FlashbirdBikeBatteryEntity
 from .entities.flashbird_key_battery_entity import FlashbirdKeyBatteryEntity
 from .entities.flashbird_mileage_entity import FlashbirdMileageEntity
+from .entities.flashbird_last_refresh_entity import FlashbirdLastRefreshEntity
 from .helpers.flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ async def async_setup_entry(
 
     # Mileage is always present
     entries.append(FlashbirdMileageEntity(hass, entry))
+    entries.append(FlashbirdLastRefreshEntity(hass, entry))
 
     # Check if we have data for the smart key before to add it for creation
     if device_info.get_smart_keys():

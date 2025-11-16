@@ -1,8 +1,11 @@
+from datetime import datetime, timezone
+
 class FlashbirdDeviceInfo:
     """Class that wraps the JSON structure returned by the API and provide safe accessors"""
 
     def __init__(self, data: dict) -> None:
         self.data = data or {}
+        self.timestamp = datetime.now(timezone.utc)
 
     def get_id(self) -> str:
         return self.data.get("id")
@@ -66,3 +69,6 @@ class FlashbirdDeviceInfo:
         if smart_keys and isinstance(smart_keys, list):
             return smart_keys[0].get("batteryPercentage")
         return None
+
+    def get_last_refresh(self) -> datetime:
+        return self.timestamp

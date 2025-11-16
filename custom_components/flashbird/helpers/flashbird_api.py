@@ -53,7 +53,25 @@ def flashbird_get_device_info(token, device_id) -> FlashbirdDeviceInfo:
     _LOGGER.info("Find device info from id " + device_id)
     payload = {
         "operationName": "Devices",
-        "query": "query Devices($deviceId: ID!) { user { device(id: $deviceId) { id softVersion activated latitude longitude lockEnabled deviceType serialNumber batteryPercentage status { isConnectedToGSM } motorcycle { id brand { label } model { label } batteryVoltageInMillivolt } statistics { totalDistance totalTime } smartKeys { serialNumber batteryPercentage } }}}",
+        "query": """
+            query Devices($deviceId: ID!) { 
+              user { 
+                device(id: $deviceId) { 
+                  id softVersion activated latitude longitude lockEnabled 
+                  deviceType serialNumber batteryPercentage 
+                  status { isConnectedToGSM lastPollingTimestamp } 
+                  motorcycle { 
+                    id 
+                    brand { label } 
+                    model { label } 
+                    batteryVoltageInMillivolt 
+                  } 
+                  statistics { totalDistance totalTime } 
+                  smartKeys { serialNumber batteryPercentage } 
+                }
+              }
+            }
+          """,
         "variables": {"deviceId": device_id},
     }
     headers = {"Authorization": "Bearer " + token}

@@ -1,6 +1,6 @@
 from homeassistant.const import Platform
 
-REFRESH_RATE = 300
+REFRESH_RATE = 3600
 
 DOMAIN = "flashbird"
 PLATFORMS: list[Platform] = [

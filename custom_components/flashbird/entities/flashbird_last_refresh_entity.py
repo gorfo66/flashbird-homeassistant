@@ -12,13 +12,13 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from ..data import FlashbirdConfigEntry
 from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
-from ..helpers.device_info import define_device_info_key
+from ..helpers.device_info import define_device_info
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class FlashbirdKeyBatteryEntity(CoordinatorEntity, SensorEntity):
-    """References the battery of the smart key"""
+class FlashbirdLastRefreshEntity(CoordinatorEntity, SensorEntity):
+    """ References the last refresh from API / WS timestamp """
 
     _hass: HomeAssistant
     _config: ConfigEntry
@@ -34,25 +34,21 @@ class FlashbirdKeyBatteryEntity(CoordinatorEntity, SensorEntity):
         self._config = configEntry
 
         self._attr_has_entity_name = True
-        self._attr_unique_id = self._config.entry_id + "_key_battery"
-        self._attr_translation_key = "key_battery"
+        self._attr_unique_id = self._config.entry_id + "_last_refresh"
+        self._attr_translation_key = "last_refresh"
         self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
     def icon(self) -> str | None:
-        return "mdi:battery-outline"
+        return "mdi:update"
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
-        return SensorDeviceClass.BATTERY
-
-    @property
-    def native_unit_of_measurement(self) -> str | None:
-        return "%"
+        return SensorDeviceClass.TIMESTAMP
 
     @property
     def device_info(self) -> DeviceInfo:
-        return define_device_info_key(self._config)
+        return define_device_info(self._config)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -60,7 +56,7 @@ class FlashbirdKeyBatteryEntity(CoordinatorEntity, SensorEntity):
         _LOGGER.debug("refresh")
 
         device_info: FlashbirdDeviceInfo = self.coordinator.data
-        new_value = device_info.get_first_smartkey_battery()
+        new_value = device_info.get_last_refresh()
         if new_value is not None:
             if self.native_value != new_value:
                 self._attr_native_value = new_value

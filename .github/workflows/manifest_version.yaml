@@ -1,0 +1,36 @@
+name: Check Manifest Version
+
+on:
+  pull_request:
+  workflow_dispatch:
+  
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  check_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # important to fetch all tags
+
+      - name: Read version from manifest.json
+        id: read_version
+        run: |
+          VERSION=$(jq -r '.version' custom_components/flashbird/manifest.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Fetch all tags
+        run: git fetch --tags origin
+
+      - name: Check if version tag exists
+        run: |
+          if git rev-parse "refs/tags/${{ steps.read_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "Error: Tag ${{ steps.read_version.outputs.version }} already exists"
+            exit 1
+          else
+            echo "Tag ${{ steps.read_version.outputs.version }} does not exist yet. OK."
+          fi

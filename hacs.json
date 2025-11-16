@@ -1,6 +1,6 @@
 {
   "name": "Flashbird",
   "country": "FR",
-  "homeassistant": "2025.1.1",
+  "homeassistant": "2025.11.2",
   "hacs": "2.0.0"
 }
