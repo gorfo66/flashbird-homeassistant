@@ -19,6 +19,7 @@ from custom_components.flashbird.helpers.graphql_ws_client import (
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "wss://pegase.api-smt.ovh/graphql"
+THROTTLE_INTERVAL = 5  # seconds
 
 
 def flashbird_ws_register(
@@ -32,15 +33,20 @@ def flashbird_ws_register(
     the client is closed when Home assistant closed
 
     Each time a message comes from the websocket subscription, we filter-it out and
-    send it back to the callback method
+    send it back to the callback method. Updates are throttled to a maximum of once
+    per 5 seconds to prevent excessive updates.
     """
     _LOGGER.debug("Registering Flashbird websocket")
 
     client_holder = {"client": None}
     task_holder = {"task": None}
     device_id = config_entry.data[CONF_TRACKER_ID]
+    last_update_time = 0.0
+    pending_device_info = None
 
     async def run_ws() -> None:
+        nonlocal last_update_time, pending_device_info
+        
         ssl_context = await hass.async_add_executor_job(ssl.create_default_context)
         current_token = config_entry.data[CONF_TOKEN]
         client = GraphQLTransportWSClient(API_URL, current_token, ssl_context)
@@ -75,7 +81,16 @@ def flashbird_ws_register(
                 )
 
                 if device_info.get_id() == device_id:
-                    await callback(device_info)
+                    current_loop_time = asyncio.get_event_loop().time()
+                    
+                    # If throttle window has passed, send immediately
+                    if current_loop_time - last_update_time >= THROTTLE_INTERVAL:
+                        await callback(device_info)
+                        last_update_time = current_loop_time
+                        pending_device_info = None
+                    else:
+                        # Store latest device info to send on next throttle window
+                        pending_device_info = device_info
         except asyncio.CancelledError:
             await client.close()
             raise
