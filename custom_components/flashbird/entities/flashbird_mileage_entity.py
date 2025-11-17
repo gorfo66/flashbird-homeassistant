@@ -42,7 +42,7 @@ class FlashbirdMileageEntity(AbstractFlashbirdSensorEntity):
     def native_unit_of_measurement(self) -> str | None:
         """Return the native unit of measurement."""
         return UnitOfLength.KILOMETERS
-    
+
     @property
     def suggested_display_precision(self) -> int:
         """Return the suggested precision."""
