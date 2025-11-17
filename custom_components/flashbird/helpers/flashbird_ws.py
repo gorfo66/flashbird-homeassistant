@@ -59,22 +59,50 @@ def flashbird_ws_register(
         await client.connect()
 
         subscribe_query = """
-        subscription Device {
+          subscription Device {
             deviceUpdated {
-                device {
-                    id softVersion latitude longitude lockEnabled
-                    deviceType serialNumber batteryPercentage
-                    status { isConnectedToGSM lastPollingTimestamp }
-                    motorcycle {
-                        brand { label }
-                        model { label }
-                        batteryVoltageInMillivolt
-                    }
-                    statistics { totalDistance totalTime }
-                    smartKeys { serialNumber batteryPercentage }
+              device {
+                id
+                softVersion
+                latitude
+                longitude
+                lockEnabled
+                deviceType
+                serialNumber
+                batteryPercentage
+                status {
+                  isConnectedToGSM
                 }
+                motorcycle {
+                  brand {
+                    label
+                  }
+                  model {
+                    label
+                  }
+                  batteryVoltageInMillivolt
+                }
+                statistics {
+                  totalDistance
+                  totalTime
+                }
+                smartKeys {
+                  serialNumber
+                  batteryPercentage
+                }
+                lockEventTimestamp
+                lockEventConnection {
+                  edges {
+                    node {
+                      id
+                      level
+                      timestamp
+                    }
+                  }
+                }
+              }
             }
-        }
+          }
         """
 
         try:

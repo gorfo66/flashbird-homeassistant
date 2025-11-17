@@ -12,6 +12,10 @@ class FlashbirdDeviceInfo:
         self.timestamp = datetime.now(UTC)
         self._refresh_rate = refresh_rate
 
+    def set_refresh_rate(self, rate: float) -> None:
+        """Set the refresh rate in Hz (updates per second)."""
+        self._refresh_rate = rate
+
     def get_id(self) -> str:
         """Return device.id."""
         return self.data.get("id")
@@ -94,6 +98,21 @@ class FlashbirdDeviceInfo:
         """Return the refresh rate in Hz (updates per second)."""
         return self._refresh_rate
 
-    def set_refresh_rate(self, rate: float) -> None:
-        """Set the refresh rate in Hz (updates per second)."""
-        self._refresh_rate = rate
+    def get_current_alert_timestamp(self) -> datetime | None:
+        """Return the timestamp as datetime of the last alert or None if no alert is on going."""
+        timestamp = self.data.get("lockEventTimestamp")
+        return datetime.fromtimestamp(timestamp, UTC) if timestamp is not None else None
+
+    def get_current_alert_level(self) -> int | None:
+        """Return the level of the current alert (1 = shake detected, 2 = repeated shake detected, 3 = movement detected)."""
+        timestamp = self.data.get("lockEventTimestamp")
+        if timestamp is not None:
+            edges = self.data.get("lockEventConnection", {}).get("edges")
+            if edges is not None and isinstance(edges, list):
+                alert = next(
+                    (x for x in edges if x.get("node").get("timestamp") == timestamp),
+                    None,
+                )
+                if alert is not None:
+                    return alert.get("level")
+        return None

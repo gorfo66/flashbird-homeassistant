@@ -6,7 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from custom_components.flashbird.entities.flashbird_tracker_entity import (
+from custom_components.flashbird.entities.tracker_entity import (
     FlashbirdTrackerEntity,
 )
 

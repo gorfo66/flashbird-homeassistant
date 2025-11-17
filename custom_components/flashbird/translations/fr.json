@@ -79,6 +79,18 @@
       },
       "refresh_rate" : {
         "name": "Fréquence de mise à jour"
+      },
+      "alert_timestamp" : {
+        "name": "Heure d'alerte"
+      },
+      "alert_level" : {
+        "name": "Niveau d'alerte",
+        "state": {
+          "no_alert": "Pas d'alerte",
+          "shake_detected": "Secousse détectée",
+          "repeated_shake_detected": "Secousse répétée détectée",
+          "movement_detected": "Mouvement détecté"
+        }
       }
     },
     "device_tracker" : {

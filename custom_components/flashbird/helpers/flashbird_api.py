@@ -76,23 +76,51 @@ def flashbird_get_device_info(token: str, device_id: str) -> FlashbirdDeviceInfo
     payload = {
         "operationName": "Devices",
         "query": """
-            query Devices($deviceId: ID!) {
-              user {
-                device(id: $deviceId) {
-                  id softVersion latitude longitude lockEnabled
-                  deviceType serialNumber batteryPercentage
-                  status { isConnectedToGSM lastPollingTimestamp }
-                  motorcycle {
-                    brand { label }
-                    model { label }
-                    batteryVoltageInMillivolt
+          query Devices($deviceId: ID!) {
+            user {
+              device(id: $deviceId) {
+                id
+                softVersion
+                latitude
+                longitude
+                lockEnabled
+                deviceType
+                serialNumber
+                batteryPercentage
+                status {
+                  isConnectedToGSM
+                }
+                motorcycle {
+                  brand {
+                    label
                   }
-                  statistics { totalDistance totalTime }
-                  smartKeys { serialNumber batteryPercentage }
+                  model {
+                    label
+                  }
+                  batteryVoltageInMillivolt
+                }
+                statistics {
+                  totalDistance
+                  totalTime
+                }
+                smartKeys {
+                  serialNumber
+                  batteryPercentage
+                }
+                lockEventTimestamp
+                lockEventConnection {
+                  edges {
+                    node {
+                      id
+                      level
+                      timestamp
+                    }
+                  }
                 }
               }
             }
-          """,
+          }
+        """,
         "variables": {"deviceId": device_id},
     }
     headers = {"Authorization": "Bearer " + token}

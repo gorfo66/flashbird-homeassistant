@@ -7,22 +7,28 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from custom_components.flashbird.entities.flashbird_battery_entity import (
+from custom_components.flashbird.entities.alert_level_entity import (
+    FlashbirdAlertLevelEntity,
+)
+from custom_components.flashbird.entities.alert_timestamp_entity import (
+    FlashbirdAlertTimestampEntity,
+)
+from custom_components.flashbird.entities.battery_entity import (
     FlashbirdBatteryEntity,
 )
-from custom_components.flashbird.entities.flashbird_bike_battery_entity import (
+from custom_components.flashbird.entities.bike_battery_entity import (
     FlashbirdBikeBatteryEntity,
 )
-from custom_components.flashbird.entities.flashbird_key_battery_entity import (
+from custom_components.flashbird.entities.key_battery_entity import (
     FlashbirdKeyBatteryEntity,
 )
-from custom_components.flashbird.entities.flashbird_last_refresh_entity import (
+from custom_components.flashbird.entities.last_refresh_entity import (
     FlashbirdLastRefreshEntity,
 )
-from custom_components.flashbird.entities.flashbird_mileage_entity import (
+from custom_components.flashbird.entities.mileage_entity import (
     FlashbirdMileageEntity,
 )
-from custom_components.flashbird.entities.flashbird_refresh_rate_entity import (
+from custom_components.flashbird.entities.refresh_rate_entity import (
     FlashbirdRefreshRateEntity,
 )
 
@@ -47,6 +53,8 @@ async def async_setup_entry(
     entries.append(FlashbirdMileageEntity(hass, entry))
     entries.append(FlashbirdLastRefreshEntity(hass, entry))
     entries.append(FlashbirdRefreshRateEntity(hass, entry))
+    entries.append(FlashbirdAlertTimestampEntity(hass, entry))
+    entries.append(FlashbirdAlertLevelEntity(hass, entry))
 
     # Check if we have data for the smart key before to add it for creation
     if device_info.get_smart_keys():
