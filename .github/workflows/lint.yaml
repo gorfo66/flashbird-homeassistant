@@ -1,4 +1,4 @@
-name: Check Manifest Version
+name: Check linting
 permissions:
   contents: read
 
@@ -17,4 +17,5 @@ jobs:
 
       - name: Check that lint rules pass
         run: |
+          pip install -r requirements.txt
           ./scripts/lint
