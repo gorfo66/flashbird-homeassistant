@@ -1,7 +1,7 @@
 """Entity for the alert lock, allowing lock/unlock and status display."""
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.lock import LockEntity
 from homeassistant.config_entries import ConfigEntry
@@ -67,8 +67,9 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             self._attr_is_unlocking = False
             self.async_write_ha_state()
 
-    async def async_lock(self, **kwargs) -> None:
+    async def async_lock(self, **kwargs: Any) -> None:
         """Lock the entity."""
+        _ = kwargs
         self._logger.debug("lock")
         self._attr_is_locking = True
         self.async_write_ha_state()
@@ -79,8 +80,9 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             True,
         )
 
-    async def async_unlock(self, **kwargs) -> None:
+    async def async_unlock(self, **kwargs: Any) -> None:
         """Unlock the entity."""
+        _ = kwargs
         self._logger.debug("unlock")
         self._attr_is_unlocking = True
         self.async_write_ha_state()

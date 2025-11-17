@@ -14,7 +14,7 @@ PLATFORMS: list[Platform] = [
 
 CONF_SERIAL_NUMBER = "serial"
 CONF_SERIAL_NUMBER_KEY = "serial_key"
-CONF_TOKEN = "token"
+CONF_TOKEN = "token"  # noqa: S105
 CONF_TRACKER_ID = "trackerId"
 CONF_MANUFACTURER = "manufacturer"
 CONF_MODEL = "model"

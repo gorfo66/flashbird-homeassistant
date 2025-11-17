@@ -20,6 +20,7 @@ from custom_components.flashbird.helpers.graphql_ws_client import (
 _LOGGER = logging.getLogger(__name__)
 API_URL = "wss://pegase.api-smt.ovh/graphql"
 THROTTLE_INTERVAL = 5  # seconds
+FREQUENCY_PERIOD = 600.0  # seconds
 
 
 def flashbird_ws_register(
@@ -44,9 +45,12 @@ def flashbird_ws_register(
     last_update_time = 0.0
     pending_device_info = None
 
+    # Refresh rate tracking (Hz - updates per second)
+    update_times = []  # List of timestamps of actual updates received
+
     async def run_ws() -> None:
-        nonlocal last_update_time, pending_device_info
-        
+        nonlocal last_update_time, pending_device_info, update_times
+
         ssl_context = await hass.async_add_executor_job(ssl.create_default_context)
         current_token = config_entry.data[CONF_TOKEN]
         client = GraphQLTransportWSClient(API_URL, current_token, ssl_context)
@@ -82,7 +86,22 @@ def flashbird_ws_register(
 
                 if device_info.get_id() == device_id:
                     current_loop_time = asyncio.get_event_loop().time()
-                    
+
+                    # Track update timestamp for refresh rate calculation
+                    update_times.append(current_loop_time)
+                    # Keep only updates from the last 10 minutes (600 seconds) for Hz
+                    update_times[:] = [
+                        t
+                        for t in update_times
+                        if current_loop_time - t < FREQUENCY_PERIOD
+                    ]
+                    # Calculate refresh rate in Hz (updates per second)
+                    # With ~1 update per 5 min: 1-2 updates / 600 sec = 0.00167-0.00333 Hz
+                    refresh_rate = (
+                        len(update_times) / FREQUENCY_PERIOD if update_times else 0.0
+                    )
+                    device_info.set_refresh_rate(refresh_rate)
+
                     # If throttle window has passed, send immediately
                     if current_loop_time - last_update_time >= THROTTLE_INTERVAL:
                         await callback(device_info)

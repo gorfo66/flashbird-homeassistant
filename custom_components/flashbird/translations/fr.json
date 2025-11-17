@@ -71,11 +71,14 @@
       "key_battery": {
         "name": "Batterie"
       },
+      "bike_battery" : {
+        "name": "Batterie moto"
+      },
       "last_refresh" : {
         "name": "Dernière mise à jour"
       },
-      "bike_battery" : {
-        "name": "Batterie moto"
+      "refresh_rate" : {
+        "name": "Fréquence de mise à jour"
       }
     },
     "device_tracker" : {

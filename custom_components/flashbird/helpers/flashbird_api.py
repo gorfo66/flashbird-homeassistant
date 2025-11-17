@@ -8,7 +8,7 @@ from .flashbird_device_info import FlashbirdDeviceInfo
 
 _LOGGER = logging.getLogger(__name__)
 API_URL = "https://pegase.api-smt.ovh/graphql"
-INVALID_TOKEN_MSG = "invalid token"
+INVALID_TOKEN_MSG = "invalid token"  # noqa: S105
 TIMEOUT = 10
 
 
@@ -33,7 +33,7 @@ def flashbird_get_token(login: str, password: str) -> str:
 
     if "errors" in response:
         _LOGGER.error("The authentication failed")
-        raise ValueError("invalid credentials")
+        raise ValueError(INVALID_TOKEN_MSG)
 
     return response["data"]["createUserOrSignInWithEmailAndPassword"]["token"]
 

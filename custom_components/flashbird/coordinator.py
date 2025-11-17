@@ -104,7 +104,6 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
         """Update data via library (periodic timer)."""
         _LOGGER.debug("async update data")
         try:
-            device_info = await self._fetch_data_from_api()
-            return device_info
+            return await self._fetch_data_from_api()
         except ValueError as err:
             raise ConfigEntryAuthFailed from err

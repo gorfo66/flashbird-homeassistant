@@ -22,6 +22,9 @@ from custom_components.flashbird.entities.flashbird_last_refresh_entity import (
 from custom_components.flashbird.entities.flashbird_mileage_entity import (
     FlashbirdMileageEntity,
 )
+from custom_components.flashbird.entities.flashbird_refresh_rate_entity import (
+    FlashbirdRefreshRateEntity,
+)
 
 if TYPE_CHECKING:
     from .helpers.flashbird_device_info import FlashbirdDeviceInfo
@@ -43,6 +46,7 @@ async def async_setup_entry(
     # Mileage is always present
     entries.append(FlashbirdMileageEntity(hass, entry))
     entries.append(FlashbirdLastRefreshEntity(hass, entry))
+    entries.append(FlashbirdRefreshRateEntity(hass, entry))
 
     # Check if we have data for the smart key before to add it for creation
     if device_info.get_smart_keys():

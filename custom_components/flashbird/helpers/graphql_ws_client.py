@@ -64,7 +64,8 @@ class GraphQLTransportWSClient:
                 raw = await self.ws.recv()
                 msg = json.loads(raw)
                 if msg.get("type") != "connection_ack":
-                    raise RuntimeError(f"Unexpected handshake message: {msg}")
+                    final_message = f"Unexpected handshake message: {msg}"
+                    raise RuntimeError(final_message)
 
                 self.connected = True
 
@@ -75,16 +76,13 @@ class GraphQLTransportWSClient:
                 # Re-subscribe active subscriptions
                 await self._restore_subscriptions()
 
-                return  # Successfully connected
-
-            except Exception as e:
-                _LOGGER.error(
-                    "cannot connect: %s. Retrying in %ss",
-                    e,
-                    self.reconnect_delay,
-                    exc_info=True,
+            except Exception:
+                _LOGGER.exception(
+                    "cannot connect. Retrying in %ss", self.reconnect_delay
                 )
                 await asyncio.sleep(self.reconnect_delay)
+            else:
+                return  # Successfully connected
 
     async def _ping_loop(self) -> None:
         """Send periodic pings and trigger reconnection on failure."""
@@ -96,10 +94,8 @@ class GraphQLTransportWSClient:
                 try:
                     _LOGGER.info("ping")
                     await self.ws.ping()
-                except Exception as e:
-                    _LOGGER.exception(
-                        "ping failed, triggering reconnection", extra={"error": str(e)}
-                    )
+                except Exception:
+                    _LOGGER.exception("ping failed, triggering reconnection")
                     return  # exit ping loop
         except asyncio.CancelledError:
             pass

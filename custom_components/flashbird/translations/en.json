@@ -71,11 +71,14 @@
       "key_battery": {
         "name": "Battery"
       },
+      "bike_battery" : {
+        "name": "Bike battery"
+      },
       "last_refresh" : {
         "name": "Last refresh"
       },
-      "bike_battery" : {
-        "name": "Bike battery"
+      "refresh_rate" : {
+        "name": "Refresh rate"
       }
     },
     "device_tracker" : {

@@ -1,13 +1,13 @@
 name: Check Manifest Version
+permissions:
+  pull_request: write
+  contents: read
+
 
 on:
   pull_request:
   workflow_dispatch:
   
-permissions:
-  pull-requests: write
-  contents: read
-
 jobs:
   check_version:
     runs-on: ubuntu-latest

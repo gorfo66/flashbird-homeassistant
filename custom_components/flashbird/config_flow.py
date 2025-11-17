@@ -94,6 +94,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_reauth(self, entry_data: dict) -> FlowResult:
         """Perform reauth upon an API authentication error."""
+        _ = entry_data
         # entry_data is required by the signature but not used.
         return await self.async_step_reauth_confirm()
 

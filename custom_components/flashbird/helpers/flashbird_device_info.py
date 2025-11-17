@@ -6,10 +6,11 @@ from datetime import UTC, datetime
 class FlashbirdDeviceInfo:
     """Class wraps the JSON structure returned by the API."""
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, refresh_rate: float | None = None) -> None:
         """Create the class."""
         self.data = data or {}
         self.timestamp = datetime.now(UTC)
+        self._refresh_rate = refresh_rate
 
     def get_id(self) -> str:
         """Return device.id."""
@@ -88,3 +89,11 @@ class FlashbirdDeviceInfo:
     def get_last_refresh(self) -> datetime:
         """Return last refresh timestamp (instantiated when creating this object)."""
         return self.timestamp
+
+    def get_refresh_rate(self) -> float | None:
+        """Return the refresh rate in Hz (updates per second)."""
+        return self._refresh_rate
+
+    def set_refresh_rate(self, rate: float) -> None:
+        """Set the refresh rate in Hz (updates per second)."""
+        self._refresh_rate = rate

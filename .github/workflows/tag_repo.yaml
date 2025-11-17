@@ -1,6 +1,6 @@
 name: Tag Release from Manifest
 permissions:
-  contents: read
+  contents: write
 
 on:
   push:

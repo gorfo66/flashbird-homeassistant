@@ -1,0 +1,20 @@
+name: Check Manifest Version
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  workflow_dispatch:
+  
+
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Check that lint rules pass
+        run: |
+          ./scripts/lint
