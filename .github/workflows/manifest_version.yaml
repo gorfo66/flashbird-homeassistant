@@ -1,6 +1,5 @@
 name: Check Manifest Version
 permissions:
-  pull_request: write
   contents: read
 
 
