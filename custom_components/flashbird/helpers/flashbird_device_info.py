@@ -101,7 +101,11 @@ class FlashbirdDeviceInfo:
     def get_current_alert_timestamp(self) -> datetime | None:
         """Return the timestamp as datetime of the last alert or None if no alert is on going."""
         timestamp = self.data.get("lockEventTimestamp")
-        return datetime.fromtimestamp(timestamp, UTC) if timestamp is not None else None
+        return (
+            datetime.fromtimestamp(timestamp / 1000, UTC)
+            if timestamp is not None
+            else None
+        )
 
     def get_current_alert_level(self) -> int | None:
         """Return the level of the current alert (1 = shake detected, 2 = repeated shake detected, 3 = movement detected)."""
@@ -114,5 +118,5 @@ class FlashbirdDeviceInfo:
                     None,
                 )
                 if alert is not None:
-                    return alert.get("level")
+                    return alert.get("node").get("level")
         return None

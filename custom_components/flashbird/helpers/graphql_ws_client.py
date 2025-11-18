@@ -21,7 +21,7 @@ class GraphQLTransportWSClient:
         token: str,
         ssl_context: ssl.SSLContext,
         reconnect_delay: int = 5,
-        ping_interval: int = 300,
+        ping_interval: int = 60,
     ) -> None:
         """Create the class."""
         self.url = url
@@ -44,7 +44,7 @@ class GraphQLTransportWSClient:
 
     async def connect(self) -> None:
         """Connect with automatic reconnect."""
-        _LOGGER.debug("connect")
+        _LOGGER.info("connect")
         while not self._closed:
             try:
                 self.ws = await websockets.connect(
@@ -110,7 +110,7 @@ class GraphQLTransportWSClient:
             self.connected = False
             if not self._closed:
                 # reconnect automatically
-                _LOGGER.debug("reconnect")
+                _LOGGER.info("reconnect")
                 await self.connect()
 
     async def _listener(self) -> None:

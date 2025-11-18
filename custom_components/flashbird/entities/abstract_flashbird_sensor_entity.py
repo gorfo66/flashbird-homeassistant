@@ -21,6 +21,7 @@ class AbstractFlashbirdSensorEntity(CoordinatorEntity, SensorEntity):
     _hass: HomeAssistant
     _config: ConfigEntry
     _logger = logging.getLogger(__name__)
+    _update_if_none = False
 
     def __init__(
         self,
@@ -53,6 +54,8 @@ class AbstractFlashbirdSensorEntity(CoordinatorEntity, SensorEntity):
         """Handle updated data from the coordinator."""
         self._logger.debug("refresh")
         new_value = self._get_updated_data()
-        if (new_value is not None) and (self.native_value != new_value):
+        if (new_value is not None or self._update_if_none) and (
+            self.native_value != new_value
+        ):
             self._attr_native_value = new_value
             self.async_write_ha_state()

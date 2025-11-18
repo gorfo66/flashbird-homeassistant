@@ -3,7 +3,6 @@
 import logging
 
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 
 from custom_components.flashbird.data import FlashbirdConfigEntry
@@ -16,6 +15,7 @@ class FlashbirdAlertTimestampEntity(AbstractFlashbirdSensorEntity):
     """The alert timestamp."""
 
     _logger = logging.getLogger(__name__)
+    _update_if_none = True
 
     def __init__(
         self,

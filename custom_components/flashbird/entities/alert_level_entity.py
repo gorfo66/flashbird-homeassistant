@@ -3,7 +3,6 @@
 import logging
 
 from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 
 from custom_components.flashbird.data import FlashbirdConfigEntry

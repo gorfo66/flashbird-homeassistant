@@ -71,11 +71,26 @@
       "key_battery": {
         "name": "Battery"
       },
+      "bike_battery" : {
+        "name": "Bike battery"
+      },
       "last_refresh" : {
         "name": "Last refresh date"
       },
-      "bike_battery" : {
-        "name": "Bike battery"
+      "refresh_rate" : {
+        "name": "Refresh rate"
+      },
+      "alert_timestamp" : {
+        "name": "Alert timestamp"
+      },
+      "alert_level" : {
+        "name": "Alert level",
+        "state": {
+          "no_alert": "No alert",
+          "shake_detected": "Shake detected",
+          "repeated_shake_detected": "Repeated shake detected",
+          "movement_detected": "Movement detected"
+        }
       }
     },
     "device_tracker" : {
