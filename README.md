@@ -1,4 +1,17 @@
 # Flashbird Home assistant integration
+
+[![Stable][releases-shield]][releases] [![HACS Badge][hacs-badge]][hacs-link] ![Project Maintenance][maintenance-shield] [![GitHub Activity][commits-shield]][commits]
+
+[commits-shield]: https://img.shields.io/github/commit-activity/y/gorfo66/flashbird-homeassistant.svg
+[commits]: https://github.com/gorfo66/flashbird-homeassistant/commit/main
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
+[releases-shield]: https://img.shields.io/github/v/release/gorfo66/flashbird-homeassistant.svg
+[releases]: https://github.com/gorfo66/flashbird-homeassistant/releases/tag/1.1.0
+[hacs-badge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg
+[hacs-link]: https://hacs.xyz/
+
+
+
 SMT Performance is a French company that delivers a motor bike tracker called "Flashbird".
 You can have more inforamtion regarding this brand here: [https://smtperformances.fr/](https://smtperformances.fr/)
 
