@@ -6,7 +6,7 @@
 [commits]: https://github.com/gorfo66/flashbird-homeassistant/commit/main
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
 [releases-shield]: https://img.shields.io/github/v/release/gorfo66/flashbird-homeassistant.svg
-[releases]: https://github.com/gorfo66/flashbird-homeassistant/releases/tag/1.1.0
+[releases]: https://github.com/gorfo66/flashbird-homeassistant/releases/latest
 [hacs-badge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg
 [hacs-link]: https://hacs.xyz/
 
