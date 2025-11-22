@@ -41,8 +41,8 @@ class FlashbirdAlertLevelEntity(AbstractFlashbirdSensorEntity):
         """Return the list of available alert levels."""
         return [
             "no_alert",
-            "shake_detected",
-            "repeated_shake_detected",
+            "vibration_detected",
+            "repeated_vibration_detected",
             "movement_detected",
         ]
 
@@ -53,8 +53,8 @@ class FlashbirdAlertLevelEntity(AbstractFlashbirdSensorEntity):
             alert_level = device_info.get_current_alert_level()
             if alert_level is not None:
                 level_map = {
-                    1: "shake_detected",
-                    2: "repeated_shake_detected",
+                    1: "vibration_detected",
+                    2: "repeated_vibration_detected",
                     3: "movement_detected",
                 }
                 return level_map.get(alert_level, "no_alert")

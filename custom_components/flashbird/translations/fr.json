@@ -87,8 +87,8 @@
         "name": "Niveau d'alerte",
         "state": {
           "no_alert": "Pas d'alerte",
-          "shake_detected": "Vibration détectée",
-          "repeated_shake_detected": "Vibration répétée détectée",
+          "vibration_detected": "Vibration détectée",
+          "repeated_vibration_detected": "Vibration répétée détectée",
           "movement_detected": "Mouvement détecté"
         }
       }
