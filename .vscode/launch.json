@@ -6,7 +6,7 @@
   "configurations": [
     
     {
-      "name": "Homeassistant debug",
+      "name": "Debug",
       "type": "debugpy",
       "request": "launch",
       "module": "homeassistant",

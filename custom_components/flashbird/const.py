@@ -1,6 +1,8 @@
+"""Constants for the Flashbird integration."""
+
 from homeassistant.const import Platform
 
-REFRESH_RATE = 300
+REFRESH_RATE = 3600
 
 DOMAIN = "flashbird"
 PLATFORMS: list[Platform] = [
@@ -12,7 +14,7 @@ PLATFORMS: list[Platform] = [
 
 CONF_SERIAL_NUMBER = "serial"
 CONF_SERIAL_NUMBER_KEY = "serial_key"
-CONF_TOKEN = "token"
+CONF_TOKEN = "token"  # noqa: S105
 CONF_TRACKER_ID = "trackerId"
 CONF_MANUFACTURER = "manufacturer"
 CONF_MODEL = "model"

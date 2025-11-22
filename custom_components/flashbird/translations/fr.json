@@ -71,11 +71,26 @@
       "key_battery": {
         "name": "Batterie"
       },
-      "last_refresh" : {
-        "name": "Dernière mise à jour des données"
-      },
       "bike_battery" : {
         "name": "Batterie moto"
+      },
+      "last_refresh" : {
+        "name": "Dernière mise à jour"
+      },
+      "refresh_rate" : {
+        "name": "Fréquence de mise à jour"
+      },
+      "alert_timestamp" : {
+        "name": "Heure d'alerte"
+      },
+      "alert_level" : {
+        "name": "Niveau d'alerte",
+        "state": {
+          "no_alert": "Pas d'alerte",
+          "vibration_detected": "Vibration détectée",
+          "repeated_vibration_detected": "Vibration répétée détectée",
+          "movement_detected": "Mouvement détecté"
+        }
       }
     },
     "device_tracker" : {

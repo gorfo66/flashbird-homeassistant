@@ -1,9 +1,11 @@
+"""Data structures for Flashbird integration."""
+
 from dataclasses import dataclass
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.loader import Integration
 
-from .coordinator import FlashbirdDataUpdateCoordinator
+from custom_components.flashbird.coordinator import FlashbirdDataUpdateCoordinator
 
 type FlashbirdConfigEntry = ConfigEntry[FlashbirdData]
 

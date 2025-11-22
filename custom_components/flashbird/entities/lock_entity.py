@@ -1,4 +1,7 @@
+"""Entity for the alert lock, allowing lock/unlock and status display."""
+
 import logging
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.lock import LockEntity
 from homeassistant.config_entries import ConfigEntry
@@ -6,30 +9,34 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from ..const import CONF_TOKEN, CONF_TRACKER_ID
-from ..data import FlashbirdConfigEntry
-from ..helpers.flashbird_device_info import FlashbirdDeviceInfo
-from ..helpers.device_info import define_device_info
-from ..helpers.flashbird_api import flashbird_set_lock_enabled
+from custom_components.flashbird.const import CONF_TOKEN, CONF_TRACKER_ID
+from custom_components.flashbird.data import FlashbirdConfigEntry
+from custom_components.flashbird.helpers.device_info import define_device_info
+from custom_components.flashbird.helpers.flashbird_api import flashbird_set_lock_enabled
 
-_LOGGER = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from custom_components.flashbird.helpers.flashbird_device_info import (
+        FlashbirdDeviceInfo,
+    )
 
 
 class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
-    """References the alert lock. Allows to lock/unlock the alerts and display the status"""
+    """References the alert lock. Allows to lock/unlock the alerts and display the status."""
 
     _hass: HomeAssistant
     _config: ConfigEntry
+    _logger = logging.getLogger(__name__)
 
     def __init__(
         self,
         hass: HomeAssistant,
-        configEntry: FlashbirdConfigEntry,
+        config_entry: FlashbirdConfigEntry,
     ) -> None:
-        super().__init__(configEntry.runtime_data.coordinator)
+        """Create the class."""
+        super().__init__(config_entry.runtime_data.coordinator)
 
         self._hass = hass
-        self._config = configEntry
+        self._config = config_entry
 
         self._attr_has_entity_name = True
         self._attr_unique_id = self._config.entry_id + "_lock"
@@ -40,27 +47,30 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
 
     @property
     def icon(self) -> str | None:
+        """Return the icon for the entity."""
         return "mdi:shield-lock-outline"
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device info for the entity."""
         return define_device_info(self._config)
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        _LOGGER.debug("refresh")
+        self._logger.debug("refresh")
         device_info: FlashbirdDeviceInfo = self.coordinator.data
-        isLocked = device_info.is_lock_enabled()
-        if isLocked is not None:
-            if self.is_locked != isLocked:
-                self._attr_is_locked = isLocked
-                self._attr_is_locking = False
-                self._attr_is_unlocking = False
-                self.async_write_ha_state()
+        is_locked = device_info.is_lock_enabled()
+        if is_locked is not None and self.is_locked != is_locked:
+            self._attr_is_locked = is_locked
+            self._attr_is_locking = False
+            self._attr_is_unlocking = False
+            self.async_write_ha_state()
 
-    async def async_lock(self, **kwargs):
-        _LOGGER.debug("lock")
+    async def async_lock(self, **kwargs: Any) -> None:
+        """Lock the entity."""
+        _ = kwargs
+        self._logger.debug("lock")
         self._attr_is_locking = True
         self.async_write_ha_state()
         await self._hass.async_add_executor_job(
@@ -69,10 +79,11 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             self._config.data[CONF_TRACKER_ID],
             True,
         )
-        await self.coordinator.async_request_refresh()
 
-    async def async_unlock(self, **kwargs):
-        _LOGGER.debug("unlock")
+    async def async_unlock(self, **kwargs: Any) -> None:
+        """Unlock the entity."""
+        _ = kwargs
+        self._logger.debug("unlock")
         self._attr_is_unlocking = True
         self.async_write_ha_state()
         await self._hass.async_add_executor_job(
@@ -81,4 +92,3 @@ class FlashbirdLockEntity(CoordinatorEntity, LockEntity):
             self._config.data[CONF_TRACKER_ID],
             False,
         )
-        await self.coordinator.async_request_refresh()

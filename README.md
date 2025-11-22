@@ -13,14 +13,22 @@ The integration provides several sensors:
 - bike battery: exposes the battery voltage of the bike
 - smartKey battery: exposes the battery level of the Smart key associated to the tracker
 
+- last refresh date: exposes the last datetime the data was updated either from websocket or from api
+- refresh rate: exposes the average refresh rate of the last 10 minutes
+
+
 ### How it looks like in Home assistant
 ![home](doc/home.png)
 ![home](doc/tracker.png)
 ![home](doc/smartkey.png)
 
 
-## Polling information
-The value of each sensor is polled from the Flashbird server each 5 minutes.
+## Fetching data
+The data is fetched every hour from the Flashbird API.
+
+In between, a websocket connexion is in charge to listen data and update sensors "live".
+The websocket streams all the data that the tracker sends to the server. The frequency of update depends on the state of tracker (if the bike moves, more data is sent, if the bike doesn't move, there is 1 hit every 5min). To prevent tsunami wave on Homeassistant, we are throttling the number of request and updating maximum every 5 seconds. The refresh date helps you determining how often the data is updated
+
 
 ## How to use
 Once the Flashbird integration is added into Homeassistant you just need to click on the "Add integration" button, search for Flashbird and fill the information presented in the connexion screen (login / password / serial number of the tracker / name of the tracker). 
