@@ -15,7 +15,7 @@
         "data_description": {
           "email": "Email",
           "password": "Password",
-          "serial" : "The serial number of the flashbird tracker",
+          "serial": "The serial number of the flashbird tracker",
           "name": "The name you want to use inside homeassistant. All the entities will be prefixed with this name"
         }
       },
@@ -61,7 +61,7 @@
         "name": "GSM connection status"
       }
     },
-    "sensor" : {
+    "sensor": {
       "mileage": {
         "name": "Mileage"
       },
@@ -71,19 +71,19 @@
       "key_battery": {
         "name": "Battery"
       },
-      "bike_battery" : {
+      "bike_battery": {
         "name": "Bike battery"
       },
-      "last_refresh" : {
+      "last_refresh": {
         "name": "Last refresh"
       },
-      "refresh_rate" : {
+      "refresh_rate": {
         "name": "Refresh rate"
       },
-      "alert_timestamp" : {
+      "alert_timestamp": {
         "name": "Alert timestamp"
       },
-      "alert_level" : {
+      "alert_level": {
         "name": "Alert level",
         "state": {
           "no_alert": "No alert",
@@ -91,11 +91,19 @@
           "repeated_vibration_detected": "Repeated vibration detected",
           "movement_detected": "Movement detected"
         }
+      },
+      "maintenance_counter_chain": {
+        "name": "Maintenance counter chain"
       }
     },
-    "device_tracker" : {
-      "tracker" : {
-        "name" : "Position"
+    "device_tracker": {
+      "tracker": {
+        "name": "Position"
+      }
+    },
+    "button": {
+      "reset_maintenance_counter_chain": {
+        "name": "Reset maintenance counter chain"
       }
     }
   },
