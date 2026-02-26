@@ -39,6 +39,8 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(seconds=REFRESH_RATE),
             always_update=True,
         )
+        # Cache last device info to compute increments between updates
+        self._last_device_info: FlashbirdDeviceInfo | None = None
 
         flashbird_ws_register(
             self.hass,
@@ -53,12 +55,14 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
     async def websocket_callback(self, device_info: FlashbirdDeviceInfo) -> None:
         """Handle websocket callback for each event."""
         _LOGGER.debug("websocket callback")
+        await self._compute_mileage_increment(device_info)
         self.async_set_updated_data(device_info)
 
     async def refresh_data(self) -> None:
         """Refresh data from the API and update coordinator."""
         _LOGGER.debug("refresh data")
         device_info = await self._fetch_data_from_api()
+        await self._compute_mileage_increment(device_info)
         self.async_set_updated_data(device_info)
 
     async def _fetch_data_from_api(self) -> FlashbirdDeviceInfo:
@@ -107,3 +111,20 @@ class FlashbirdDataUpdateCoordinator(DataUpdateCoordinator):
             return await self._fetch_data_from_api()
         except ValueError as err:
             raise ConfigEntryAuthFailed from err
+
+    async def _compute_mileage_increment(
+        self, device_info: FlashbirdDeviceInfo
+    ) -> None:
+        """Compute mileage increment on the device_info."""
+        prev = self._last_device_info
+        curr_total = device_info.get_total_distance()
+        increment = 0
+        if prev is not None and curr_total is not None:
+            prev_total = prev.get_total_distance()
+            if prev_total is not None and curr_total >= prev_total:
+                increment = curr_total - prev_total
+
+        device_info.set_mileage_increment(increment)
+
+        # Cache the latest device info for next computation
+        self._last_device_info = device_info

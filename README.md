@@ -27,17 +27,18 @@ The integration provides several sensors:
 - smartKey battery: exposes the battery level of the Smart key associated to the tracker
 - alert level: exposes the current on going alert
 - alert time stamp: exposes the timestamp of the current alert
-
+- maintenance counter for the chain + reset button: automatically increments by the time you ride your bike. It will helps you building some alerting when it's time to clean it up.
 
 You also have access to some diagnostic sensors that helps identifying problems with the integration:
 - last refresh date: exposes the last datetime the data was updated either from websocket or from api
 - refresh rate: exposes the average refresh rate of the last 10 minutes
 
 
+
 ### How it looks like in Home assistant
-![home](doc/home.png)
-![home](doc/tracker.png)
-![home](doc/smartkey.png)
+![home page](doc/home.png)
+![tracker page](doc/tracker.png?v2)
+![smart key page](doc/smartkey.png)
 
 
 ## Fetching data

@@ -10,6 +10,7 @@ PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
     Platform.DEVICE_TRACKER,
     Platform.LOCK,
+    Platform.BUTTON,
 ]
 
 CONF_SERIAL_NUMBER = "serial"
@@ -20,3 +21,5 @@ CONF_MANUFACTURER = "manufacturer"
 CONF_MODEL = "model"
 CONF_FIRMWARE_VERSION = "firmwareVersion"
 CONF_NAME = "name"
+
+EVENT_RESET_COUNTER = "reset_counter"

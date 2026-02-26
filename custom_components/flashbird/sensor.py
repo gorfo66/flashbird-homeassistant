@@ -25,6 +25,9 @@ from custom_components.flashbird.entities.key_battery_entity import (
 from custom_components.flashbird.entities.last_refresh_entity import (
     FlashbirdLastRefreshEntity,
 )
+from custom_components.flashbird.entities.maintenance_counter_chain_entity import (
+    FlashbirdMaintenanceCounterChainEntity,
+)
 from custom_components.flashbird.entities.mileage_entity import (
     FlashbirdMileageEntity,
 )
@@ -51,6 +54,7 @@ async def async_setup_entry(
 
     # Mileage is always present
     entries.append(FlashbirdMileageEntity(hass, entry))
+    entries.append(FlashbirdMaintenanceCounterChainEntity(hass, entry))
     entries.append(FlashbirdLastRefreshEntity(hass, entry))
     entries.append(FlashbirdRefreshRateEntity(hass, entry))
     entries.append(FlashbirdAlertTimestampEntity(hass, entry))
