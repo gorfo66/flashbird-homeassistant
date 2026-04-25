@@ -1,7 +1,7 @@
 {
   "title": "Flashbird",
   "config": {
-    "flow_title": "flashbird configuration",
+    "flow_title": "Configuration de Flashbird",
     "step": {
       "user": {
         "title": "Connexion",
@@ -20,21 +20,24 @@
         }
       },
       "reauth_confirm": {
-        "title": "Re-authentification",
-        "description": "You need to provide your flashbird credentials. They will not be stored in this application",
+        "title": "Re-connexion",
+        "description": "Vous devez fournir à nouveau vos identifiants de connexion Flashbird. Ils ne seront pas stockés sur Home assistant.",
         "data": {
           "email": "Email",
-          "password": "Password"
+          "password": "Mot de passe"
         },
         "data_description": {
           "email": "Email",
-          "password": "Password"
+          "password": "Mot de passe"
         }
       }
+    },
+    "abort": {
+      "reauth_success": "L'intégration a été reconnectée avec succès"
     }
   },
   "options": {
-    "flow_title": "Flashbird re-configuration",
+    "flow_title": "Re-configuration de Flashbird",
     "step": {
       "init": {
         "title": "Reconnexion",
@@ -44,7 +47,7 @@
           "password": "Mot de passe"
         },
         "data_description": {
-          "name": "Email",
+          "email": "Email",
           "password": "Mot de passe"
         }
       }
@@ -110,6 +113,9 @@
   "exceptions": {
     "invalid_token": {
       "message": "Vos identifiants sont invalides"
+    },
+    "authentification_failed": {
+      "message": "La connexion a échoué: {error}"
     }
   }
 }

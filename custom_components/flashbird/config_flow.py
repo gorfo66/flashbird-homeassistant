@@ -33,6 +33,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     _config: ClassVar[dict] = {}
+    _reauth_data: ClassVar[dict] = {}
 
     async def async_step_user(self, user_input: dict | None = None) -> FlowResult:
         """Handle the initial step of the user flow."""
@@ -94,8 +95,7 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_reauth(self, entry_data: dict) -> FlowResult:
         """Perform reauth upon an API authentication error."""
-        _ = entry_data
-        # entry_data is required by the signature but not used.
+        self._reauth_data = entry_data
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
@@ -120,17 +120,21 @@ class FlashbirdConfigFlow(ConfigFlow, domain=DOMAIN):
             token = await self.hass.async_add_executor_job(
                 flashbird_get_token, user_input["email"], user_input["password"]
             )
-            new_config = self._config.data.copy()
+
+            reauth_entry = self._get_reauth_entry()
+            new_config = self._get_reauth_entry().data.copy()
             new_config[CONF_TOKEN] = token
 
-            self.hass.config_entries.async_update_entry(self._config, data=new_config)
-            return self.async_update_reload_and_abort(title=None, data=None)
-        except ValueError:
+            self.hass.config_entries.async_update_entry(reauth_entry, data=new_config)
+            await self.hass.config_entries.async_reload(reauth_entry.entry_id)
+            return self.async_abort(reason="reauth_success")
+        except ValueError as err:
+            msg = str(err) if err.args else repr(err)
             raise HomeAssistantError(
                 translation_domain=DOMAIN,
-                translation_key="invalid_token",
-                translation_placeholders=None,
-            ) from None
+                translation_key="authentification_failed",
+                translation_placeholders={"error": msg},
+            ) from err
 
 
 class FlashbirdOptionsFlow(OptionsFlow):

@@ -31,6 +31,9 @@
           "password": "Password"
         }
       }
+    },
+    "abort": {
+      "reauth_success": "The integration was re-authenticated successfully."
     }
   },
   "options": {
@@ -110,6 +113,9 @@
   "exceptions": {
     "invalid_token": {
       "message": "Your credentials are invalid"
+    },
+    "authentification_failed": {
+      "message": "Authentication failed: {error}"
     }
   }
 }

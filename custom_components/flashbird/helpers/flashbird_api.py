@@ -32,8 +32,9 @@ def flashbird_get_token(login: str, password: str) -> str:
     response = r.json()
 
     if "errors" in response:
-        _LOGGER.error("The authentication failed")
-        raise ValueError(INVALID_TOKEN_MSG)
+        error_message = response["errors"][0]["message"]
+        _LOGGER.error("The authentication failed: %s", error_message)
+        raise ValueError(error_message)
 
     return response["data"]["createUserOrSignInWithEmailAndPassword"]["token"]
 
