@@ -31,6 +31,9 @@
           "password": "Password"
         }
       }
+    },
+    "abort": {
+      "reauth_success": "The integration was re-authenticated successfully."
     }
   },
   "options": {
@@ -75,7 +78,7 @@
         "name": "Bike battery"
       },
       "last_refresh": {
-        "name": "Last refresh"
+        "name": "Last refresh date"
       },
       "refresh_rate": {
         "name": "Refresh rate"
@@ -110,6 +113,9 @@
   "exceptions": {
     "invalid_token": {
       "message": "Your credentials are invalid"
+    },
+    "authentification_failed": {
+      "message": "Authentication failed: {error}"
     }
   }
 }
