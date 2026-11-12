@@ -25,10 +25,14 @@ def define_device_info(config_entry: ConfigEntry) -> DeviceInfo:
     )
 
     if CONF_NAME in config_entry.data:
-        device.update(name=config_entry.data[CONF_NAME])
+        device.update({
+            "name": config_entry.data[CONF_NAME]
+            })
 
     if CONF_FIRMWARE_VERSION in config_entry.data:
-        device.update(sw_version=config_entry.data[CONF_FIRMWARE_VERSION])
+        device.update({
+            "sw_version": config_entry.data[CONF_FIRMWARE_VERSION]
+            })
 
     return device
 
@@ -45,6 +49,8 @@ def define_device_info_key(config_entry: ConfigEntry) -> DeviceInfo:
 
     # add the serial number if present in the configuration (not available in first boot)
     if CONF_SERIAL_NUMBER_KEY in config_entry.data:
-        device.update(serial_number=config_entry.data[CONF_SERIAL_NUMBER_KEY])
+        device.update({
+            "serial_number": config_entry.data[CONF_SERIAL_NUMBER_KEY]
+            })
 
     return device
